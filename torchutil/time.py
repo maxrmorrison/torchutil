@@ -1,5 +1,6 @@
 import contextlib
 import time
+from typing import Optional
 
 
 ###############################################################################
@@ -8,8 +9,12 @@ import time
 
 
 @contextlib.contextmanager
-def context(name):
-    """Wrapper to handle context changes of global timer"""
+def context(name: Optional[str]):
+    """Wrapper to handle context changes of global timer
+
+    Arguments
+        name - Name of the timer to add time to
+    """
     if not hasattr(context, 'timer'):
         context.timer = Timer()
 
@@ -20,8 +25,12 @@ def context(name):
     context.timer.name = None
 
 
-def results():
-    """Get timing results"""
+def results() -> dict:
+    """Get timing results
+
+    Returns
+        Timing results: {name: elapsed_time} for all names
+    """
     if not hasattr(context, 'timer'):
         return {}
     return context.timer()
