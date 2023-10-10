@@ -25,9 +25,11 @@ def on_finish(
     if track_time:
         start_time = time.time()
 
-    # Run user code
     try:
+
+        # Run user code
         yield
+
     except Exception as exception:
 
         # Ignore pdb exceptions
