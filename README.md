@@ -5,9 +5,8 @@
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![Downloads](https://pepy.tech/badge/torchutil)](https://pepy.tech/project/torchutil)
 
+Utilities for developing deep learning frameworks in PyTorch
 </div>
-
-PyTorch utilities for developing deep learning frameworks
 
 
 ## Table of contents
@@ -59,26 +58,125 @@ model, *_ = torchutil.checkpoint.load(file, model, optimizer)
 
 ### `torchutil.checkpoint.latest_path`
 
+```python
+def latest_path(
+        directory: Union[str, bytes, os.PathLike],
+        regex: str = '*.pt',
+        latest_fn: Callable = highest_number,
+    ) -> Union[str, bytes, os.PathLike]:
+    """Retrieve the path to the most recent checkpoint in a directory
+
+    Arguments
+        directory - The directory to search for checkpoint files
+        regex - The regular expression matching checkpoints
+        latest_fn - Takes a list of checkpoint paths and returns the latest.
+                    Default assumes checkpoint names are training step count.
+
+    Returns
+        The latest checkpoint in directory according to latest_fn
+    """
+```
+
 
 ### `torchutil.checkpoint.load`
 
+```python
+def load(
+    file: Union[str, bytes, os.PathLike],
+    model: torch.nn.Module,
+    optimizer: Optional[torch.optim.Optimizer] = None,
+    map_location: str = 'cpu') -> Tuple[
+        torch.nn.Module,
+        Union[None, torch.optim.Optimizer],
+        Dict
+    ]:
+    """Load model checkpoint
+
+    Arguments
+        file - The checkpoint file
+        model - The PyTorch model
+        optimizer - Optional PyTorch optimizer for training
+        map_location - The device to load the checkpoint on
+
+    Returns
+        model - The model with restored weights
+        optimizer - Optional optimizer with restored parameters
+        state - Additional values that the user defined during save
+    """
+```
 
 ### `torchutil.checkpoint.save`
 
+```python
+def save(
+    file: Union[str, bytes, os.PathLike],
+    model: torch.nn.Module,
+    optimizer: torch.optim.Optimizer,
+    accelerator=None,
+    **kwargs):
+    """Save training checkpoint to disk
+
+    Arguments
+        file - The checkpoint file
+        model - The PyTorch model
+        optimizer - The PyTorch optimizer
+        accelerator - HuggingFace Accelerator for device management
+        kwargs - Additional values to save
+    """
+```
 
 ## Download
 
-
 ### `torchutil.download.file`
+
+```python
+def file(url: 'str', path: Union[str, bytes, os.PathLike]):
+    """Download file from url
+
+    Arguments
+        url - The URL to download
+        path - The location to save results
+    """
+```
 
 
 ### `torchutil.download.tarbz2`
 
+```python
+def tarbz2(url: 'str', path: Union[str, bytes, os.PathLike]):
+    """Download and extract tar bz2 file to location
+
+    Arguments
+        url - The URL to download
+        path - The location to save results
+    """
+```
+
 
 ### `torchutil.download.targz`
 
+```python
+def targz(url: 'str', path: Union[str, bytes, os.PathLike]):
+    """Download and extract tar gz file to location
+
+    Arguments
+        url - The URL to download
+        path - The location to save results
+    """
+```
+
 
 ### `torchutil.download.zip`
+
+```python
+def zip(url: 'str', path: Union[str, bytes, os.PathLike]):
+    """Download and extract zip file to location
+
+    Arguments
+        url - The URL to download
+        path - The location to save results
+    """
+```
 
 
 ## Notify
@@ -93,7 +191,7 @@ def train():
 
 # Equivalent using "with"
 def train():
-    with torchutil.notify.on_finish('train):
+    with torchutil.notify.on_finish('train'):
         ...
 ```
 

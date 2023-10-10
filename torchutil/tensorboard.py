@@ -1,6 +1,6 @@
+import os
 from typing import Dict, Optional, Union
 
-import matplotlib
 import torch
 
 
@@ -14,7 +14,7 @@ def update(
     step: int,
     audio: Optional[Dict[str, torch.Tensor]] = None,
     sample_rate: Optional[int] = None,
-    figures: Optional[Dict[str, matplotlib.figure.Figure]] = None,
+    figures: Optional[Dict] = None,
     images: Optional[Dict[str, torch.Tensor]] = None,
     scalars: Optional[Dict[str, Union[float, int, torch.Tensor]]] = None):
     """Update Tensorboard

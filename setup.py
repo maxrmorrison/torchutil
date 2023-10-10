@@ -15,8 +15,7 @@ setup(
     extras_require={
         'train': [
             'apprise',
-            'accelerate',
-            'matplotlib'
+            'accelerate'
         ]
     },
     install_requires=['gdown', 'torch'],

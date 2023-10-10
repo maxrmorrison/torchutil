@@ -1,6 +1,8 @@
+import os
 import requests
 import tarfile
 import zipfile
+from typing import Union
 
 
 ###############################################################################
@@ -8,8 +10,13 @@ import zipfile
 ###############################################################################
 
 
-def file(url, path):
-    """Download file from url"""
+def file(url: 'str', path: Union[str, bytes, os.PathLike]):
+    """Download file from url
+
+    Arguments
+        url - The URL to download
+        path - The location to save results
+    """
     with requests.get(url, stream=True) as rstream:
         rstream.raise_for_status()
         with open(path, 'wb') as fstream:
@@ -17,24 +24,39 @@ def file(url, path):
                 fstream.write(chunk)
 
 
-def tarbz2(url, path):
-    """Download and extract tar file to location"""
+def tarbz2(url: 'str', path: Union[str, bytes, os.PathLike]):
+    """Download and extract tar bz2 file to location
+
+    Arguments
+        url - The URL to download
+        path - The location to save results
+    """
     with requests.get(url, stream=True) as rstream:
         rstream.raise_for_status()
         with tarfile.open(fileobj=rstream.raw, mode='r|bz2') as tstream:
             tstream.extractall(path)
 
 
-def targz(url, path):
-    """Download and extract tar file to location"""
+def targz(url: 'str', path: Union[str, bytes, os.PathLike]):
+    """Download and extract tar gz file to location
+
+    Arguments
+        url - The URL to download
+        path - The location to save results
+    """
     with requests.get(url, stream=True) as rstream:
         rstream.raise_for_status()
         with tarfile.open(fileobj=rstream.raw, mode='r|gz') as tstream:
             tstream.extractall(path)
 
 
-def zip(url, path):
-    """Download and extract zip file to location"""
+def zip(url: 'str', path: Union[str, bytes, os.PathLike]):
+    """Download and extract zip file to location
+
+    Arguments
+        url - The URL to download
+        path - The location to save results
+    """
     with requests.get(url, stream=True) as rstream:
         rstream.raise_for_status()
         with zipfile.ZipFile(rstream) as zstream:
