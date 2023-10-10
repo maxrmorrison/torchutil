@@ -22,13 +22,17 @@ PyTorch utilities for developing deep learning frameworks
     * [`torchutil.download.targz`](torchutildownloadtargz)
     * [`torchutil.download.zip`](torchutildownloadzip)
 - [Notify](#notify)
+    * [`torchutil.notify.on_finish`](torchutilnotifyon_finish)
 - [Tensorboard](#tensorboard)
+    * [`torchutil.tensorboard.update`](torchutiltensorboardupdate)
 - [Time](#time)
+    * [`torchutil.time.context`](torchutiltimecontext)
+    * [`torchutil.time.results`](torchutiltimeresults)
 
 
 ## Checkpoint
 
-```
+```python
 import torch
 import torchutil
 
@@ -79,7 +83,7 @@ model, *_ = torchutil.checkpoint.load(file, model, optimizer)
 
 ## Notify
 
-```
+```python
 import torchutil
 
 # Send notification when training finishes
@@ -96,6 +100,7 @@ def train():
 
 ### `torchutil.notify.on_finish`
 
+```python
 @contextlib.contextmanager
 def on_finish(
     description: str,
@@ -108,20 +113,51 @@ def on_finish(
         track_time - Whether to report time elapsed
         notify_on_fail - Whether to send a notification on failure
     """
+```
 
 
 ## Tensorboard
 
-
-```
+```python
+import matplotlib.pyplot as plt
 import torch
 import torchutil
 
-# TODO
+# Directory to write Tensorboard files
+directory = 'tensorboard'
+
+# Training step
+step = 0
+
+# Example audio
+audio = torch.zeros(1, 16000)
+sample_rate = 16000
+
+# Example figure
+figure = plt.figure()
+plt.plot([0, 1, 2, 3])
+
+# Example image
+image = torch.zeros(256, 256, 3)
+
+# Example scalar
+loss = 0
+
+# Update Tensorboard
+torchutil.tensorboard.update(
+    directory,
+    step,
+    audio={'audio': audio},
+    sample_rate=sample_rate,
+    figures={'figure': figure},
+    images={'image': image},
+    scalars={'loss': loss})
 ```
+
 
 ### `torchutil.tensorboard.update`
 
+```python
 def update(
     directory: Union[str, bytes, os.PathLike],
     step: int,
@@ -141,11 +177,12 @@ def update(
         images - Optional dictionary of 3D image tensors to monitor
         scalars - Optional dictionary of scalars to monitor
     """
+```
 
 
 ## Time
 
-```
+```python
 import time
 
 # Perform timing
@@ -163,6 +200,7 @@ print(torchutil.timer.results())
 
 ### `torchutil.time.context`
 
+```python
 @contextlib.contextmanager
 def context(name: str):
     """Wrapper to handle context changes of global timer
@@ -170,13 +208,16 @@ def context(name: str):
     Arguments
         name - Name of the timer to add time to
     """
+```
 
 
 ### `torchutil.time.results`
 
+```python
 def results() -> dict:
     """Get timing results
 
     Returns
         Timing results: {name: elapsed_time} for all names
     """
+```

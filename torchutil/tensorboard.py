@@ -74,7 +74,7 @@ def write_figures(directory, step, figures):
 def write_images(directory, step, images):
     """Write images to Tensorboard"""
     for name, image in images.items():
-        writer(directory).add_image(name, image, step)
+        writer(directory).add_image(name, image, step, dataformats='HCW')
 
 
 def write_scalars(directory, step, scalars):
