@@ -5,9 +5,11 @@
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![Downloads](https://pepy.tech/badge/torchutil)](https://pepy.tech/project/torchutil)
 
-General utilities for developing deep learning frameworks in PyTorch
+General utilities for developing deep learning projects in PyTorch
 
-`pip install torchutil`
+Inference utilities: `pip install torchutil`
+
+Training and inference utilities: `pip install torchutil[train]`
 </div>
 
 
@@ -114,7 +116,7 @@ def save(
     file: Union[str, bytes, os.PathLike],
     model: torch.nn.Module,
     optimizer: torch.optim.Optimizer,
-    accelerator=None,
+    accelerator: Optional[accelerate.Accelerator] = None,
     **kwargs):
     """Save training checkpoint to disk
 
