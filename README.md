@@ -6,6 +6,7 @@
 [![Downloads](https://pepy.tech/badge/torchutil)](https://pepy.tech/project/torchutil)
 
 Utilities for developing deep learning frameworks in PyTorch
+
 `pip install torchutil`
 </div>
 
