@@ -5,7 +5,7 @@
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![Downloads](https://pepy.tech/badge/torchutil)](https://pepy.tech/project/torchutil)
 
-Utilities for developing deep learning frameworks in PyTorch
+General utilities for developing deep learning frameworks in PyTorch
 
 `pip install torchutil`
 </div>
