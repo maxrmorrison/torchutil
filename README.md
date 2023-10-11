@@ -14,6 +14,7 @@ General utilities for developing deep learning projects in PyTorch
 ## Table of contents
 
 - [Checkpoint](#checkpoint)
+    * [`torchutil.checkpoint.best_path`](torchutilcheckpointbest_path)
     * [`torchutil.checkpoint.latest_path`](torchutilcheckpointlatest_path)
     * [`torchutil.checkpoint.load`](torchutilcheckpointload)
     * [`torchutil.checkpoint.save`](torchutilcheckpointsave)
@@ -59,13 +60,36 @@ model, *_ = torchutil.checkpoint.load(file, model, optimizer)
 ```
 
 
+### `torchutil.checkpoint.best_path`
+
+```python
+def best_path(
+    directory: Union[str, bytes, os.PathLike],
+    regex: str = '*.pt',
+    best_fn: Callable = highest_score
+) -> Tuple[Union[str, bytes, os.PathLike], float]:
+    """Retrieve the path to the best checkpoint
+
+    Arguments
+        directory - The directory to search for checkpoint files
+        regex - The regular expression matching checkpoints
+        best_fn - Takes a list of checkpoint paths and returns the latest
+                  Default assumes checkpoint names are training step count.
+
+    Returns
+        best_file - The filename of the checkpoint with the best score
+        best_score - The corresponding score
+    """
+```
+
+
 ### `torchutil.checkpoint.latest_path`
 
 ```python
 def latest_path(
         directory: Union[str, bytes, os.PathLike],
         regex: str = '*.pt',
-        latest_fn: Callable = highest_number,
+        latest_fn: Callable = largest_number_filename,
     ) -> Union[str, bytes, os.PathLike]:
     """Retrieve the path to the most recent checkpoint in a directory
 

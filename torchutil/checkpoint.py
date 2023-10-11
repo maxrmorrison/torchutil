@@ -71,11 +71,28 @@ def save(
 
 
 ###############################################################################
-# Utilities
+# Search predicates
 ###############################################################################
 
 
-def highest_number(
+def highest_score(
+    files: List[Union[str, bytes, os.PathLike]],
+    scores: List[float]
+) -> Tuple[Union[str, bytes, os.PathLike], float]:
+    """Default for determining best checkpoint
+
+    Arguments
+        files - The checkpoint files
+
+    Returns
+        best_file - The filename of the checkpoint with the best score
+        best_score - The corresponding score
+    """
+    index = torch.argsort(torch.tensor(scores))[-1]
+    return files[index], scores[index]
+
+
+def largest_number_filename(
     files: List[Union[str, bytes, os.PathLike]]
 ) -> Union[str, bytes, os.PathLike]:
     """Default for determining latest path; assumes filename is steps
@@ -90,10 +107,44 @@ def highest_number(
     return files[-1]
 
 
+###############################################################################
+# Search checkpoints
+###############################################################################
+
+
+def best_path(
+    directory: Union[str, bytes, os.PathLike],
+    regex: str = '*.pt',
+    best_fn: Callable = highest_score
+) -> Tuple[Union[str, bytes, os.PathLike], float]:
+    """Retrieve the path to the best checkpoint
+
+    Arguments
+        directory - The directory to search for checkpoint files
+        regex - The regular expression matching checkpoints
+        best_fn - Takes a list of checkpoint paths and returns the latest
+                  Default assumes checkpoint names are training step count.
+
+    Returns
+        best_file - The filename of the checkpoint with the best score
+        best_score - The corresponding score
+    """
+    # Retrieve checkpoint filenames
+    files = list(directory.glob(regex))
+
+    # If no matching checkpoint files, no training has occurred
+    if not files:
+        return
+
+    # Get all scores
+    scores = [torch.load(file, map_location='cpu')['score'] for file in files]
+    return best_fn(files, scores)
+
+
 def latest_path(
         directory: Union[str, bytes, os.PathLike],
         regex: str = '*.pt',
-        latest_fn: Callable = highest_number,
+        latest_fn: Callable = largest_number_filename,
     ) -> Union[str, bytes, os.PathLike]:
     """Retrieve the path to the most recent checkpoint in a directory
 
