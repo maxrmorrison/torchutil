@@ -7,9 +7,7 @@
 
 General utilities for developing deep learning projects in PyTorch
 
-Inference utilities: `pip install torchutil`
-
-Training and inference utilities: `pip install torchutil[train]`
+`pip install torchutil`
 </div>
 
 

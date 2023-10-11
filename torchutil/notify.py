@@ -4,6 +4,8 @@ import os
 import time
 from typing import Callable
 
+import apprise
+
 
 ###############################################################################
 # Send job notifications
@@ -111,7 +113,6 @@ def push(message: str):
     service = os.getenv('PYTORCH_NOTIFICATION_URL', default=None)
     if service is not None:
         if not hasattr(push, 'messenger'):
-            import apprise
             push.messenger = apprise.Apprise()
             push.messenger.add(service)
         push.messenger.notify(message)

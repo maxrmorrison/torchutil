@@ -12,13 +12,7 @@ setup(
     author='Max Morrison',
     author_email='maxrmorrison@gmail.com',
     url='https://github.com/maxrmorrison/torchutil',
-    extras_require={
-        'train': [
-            'apprise',
-            'accelerate'
-        ]
-    },
-    install_requires=['gdown', 'torch'],
+    install_requires=['accelerate', 'apprise', 'torch'],
     packages=['torchutil'],
     package_data={'torchutil': ['assets/*', 'assets/*/*']},
     long_description=long_description,
