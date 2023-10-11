@@ -25,7 +25,8 @@ Training and inference utilities: `pip install torchutil[train]`
     * [`torchutil.download.targz`](torchutildownloadtargz)
     * [`torchutil.download.zip`](torchutildownloadzip)
 - [Notify](#notify)
-    * [`torchutil.notify.on_finish`](torchutilnotifyon_finish)
+    * [`torchutil.notify.on_exit`](torchutilnotifyon_exit)
+    * [`torchutil.notify.on_return`](torchutilnotifyon_return)
 - [Tensorboard](#tensorboard)
     * [`torchutil.tensorboard.update`](torchutiltensorboardupdate)
 - [Time](#time)
@@ -185,22 +186,26 @@ def zip(url: 'str', path: Union[str, bytes, os.PathLike]):
 
 ## Notify
 
+To use the `torchutil` notification system, set the `PYTORCH_NOTIFICATION_URL`
+environment variable to a supported webhook as explained in
+[the Apprise documentation](https://pypi.org/project/apprise/).
+
 ```python
 import torchutil
 
-# Send notification when training finishes
-@torchutil.notify.on_finish('train')
+# Send notification when function returns
+@torchutil.notify.on_return('train')
 def train():
     ...
 
-# Equivalent using "with"
+# Equivalent using context manager
 def train():
-    with torchutil.notify.on_finish('train'):
+    with torchutil.notify.on_exit('train'):
         ...
 ```
 
 
-### `torchutil.notify.on_finish`
+### `torchutil.notify.on_exit`
 
 ```python
 @contextlib.contextmanager
@@ -209,6 +214,23 @@ def on_finish(
     track_time: bool = True,
     notify_on_fail: bool = True):
     """Context manager for sending job notifications
+
+    Arguments
+        description - The name of the job being run
+        track_time - Whether to report time elapsed
+        notify_on_fail - Whether to send a notification on failure
+    """
+```
+
+
+### `torchutil.notify.on_return`
+
+```python
+def on_return(
+    description: str,
+    track_time: bool = True,
+    notify_on_fail: bool = True) -> Callable:
+    """Decorator for sending job notifications
 
     Arguments
         description - The name of the job being run
