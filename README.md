@@ -3,9 +3,9 @@
 
 [![PyPI](https://img.shields.io/pypi/v/torchutil.svg)](https://pypi.python.org/pypi/torchutil)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
-[![Downloads](https://pepy.tech/badge/torchutil)](https://pepy.tech/project/torchutil)
+[![Downloads](https://static.pepy.tech/badge/torchutil)](https://pepy.tech/project/torchutil)
 
-General utilities for developing deep learning projects in PyTorch
+General utilities for developing deep learning projects using PyTorch + HuggingFace Accelerate
 
 `pip install torchutil`
 </div>
