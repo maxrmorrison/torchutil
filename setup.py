@@ -8,7 +8,7 @@ with open('README.md') as file:
 setup(
     name='torchutil',
     description='PyTorch utilities for developing deep learning frameworks',
-    version='0.0.1',
+    version='0.0.2',
     author='Max Morrison',
     author_email='maxrmorrison@gmail.com',
     url='https://github.com/maxrmorrison/torchutil',
