@@ -31,6 +31,7 @@ General utilities for developing deep learning projects using PyTorch + HuggingF
 - [Time](#time)
     * [`torchutil.time.context`](#torchutiltimecontext)
     * [`torchutil.time.results`](#torchutiltimeresults)
+    * [`torchutil.time.reset`](#torchutiltimereset)
 
 
 ## Checkpoint
@@ -354,6 +355,14 @@ def context(name: str):
     Arguments
         name - Name of the timer to add time to
     """
+```
+
+
+### `torchutil.time.reset`
+
+```python
+def reset():
+    """Clear timer state"""
 ```
 
 

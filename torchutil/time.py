@@ -25,6 +25,14 @@ def context(name: Optional[str]):
     context.timer.name = None
 
 
+def reset():
+    """Clear timer state"""
+    try:
+        del context.timer
+    except AttributeError:
+        pass
+
+
 def results() -> dict:
     """Get timing results
 
