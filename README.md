@@ -23,6 +23,13 @@ General utilities for developing deep learning projects using PyTorch + HuggingF
     * [`torchutil.download.tarbz2`](#torchutildownloadtarbz2)
     * [`torchutil.download.targz`](#torchutildownloadtargz)
     * [`torchutil.download.zip`](#torchutildownloadzip)
+- [Metrics](#metrics)
+    * [`torchutil.metrics.Accuracy`](#torchutilmetricsaccuracy)
+    * [`torchutil.metrics.F1`](#torchutilmetricsf1)
+    * [`torchutil.metrics.L1`](#torchutilmetricsl1)
+    * [`torchutil.metrics.Precision`](#torchutilmetricsprecision)
+    * [`torchutil.metrics.Recall`](#torchutilmetricsrecall)
+    * [`torchutil.metrics.RMSE`](#torchutilmetricsrmse)
 - [Notify](#notify)
     * [`torchutil.notify.on_exit`](#torchutilnotifyon_exit)
     * [`torchutil.notify.on_return`](#torchutilnotifyon_return)
@@ -66,14 +73,14 @@ model, *_ = torchutil.checkpoint.load(file, model, optimizer)
 ```python
 def best_path(
     directory: Union[str, bytes, os.PathLike],
-    regex: str = '*.pt',
+    glob: str = '*.pt',
     best_fn: Callable = highest_score
 ) -> Tuple[Union[str, bytes, os.PathLike], float]:
     """Retrieve the path to the best checkpoint
 
     Arguments
         directory - The directory to search for checkpoint files
-        regex - The regular expression matching checkpoints
+        glob - The regular expression matching checkpoints
         best_fn - Takes a list of checkpoint paths and returns the latest
                   Default assumes checkpoint names are training step count.
 
@@ -89,14 +96,14 @@ def best_path(
 ```python
 def latest_path(
         directory: Union[str, bytes, os.PathLike],
-        regex: str = '*.pt',
+        glob: str = '*.pt',
         latest_fn: Callable = largest_number_filename,
     ) -> Union[str, bytes, os.PathLike]:
     """Retrieve the path to the most recent checkpoint in a directory
 
     Arguments
         directory - The directory to search for checkpoint files
-        regex - The regular expression matching checkpoints
+        glob - The regular expression matching checkpoints
         latest_fn - Takes a list of checkpoint paths and returns the latest.
                     Default assumes checkpoint names are training step count.
 
@@ -204,6 +211,176 @@ def zip(url: 'str', path: Union[str, bytes, os.PathLike]):
         url - The URL to download
         path - The location to save results
     """
+```
+
+
+## Metrics
+
+### `torchutil.metrics.Accuracy`
+
+```python
+class Accuracy(Metric):
+    """Batch-updating accuracy metric"""
+
+    def __call__(self)-> float:
+        """Retrieve the current accuracy value
+
+        Returns:
+            The current accuracy value
+        """
+
+    def update(self, predicted: torch.Tensor, target: torch.Tensor) -> None:
+        """Update the metric
+
+        Arguments
+            predicted
+                The model prediction
+            target
+                The corresponding ground truth
+        """
+
+    def reset(self) -> None:
+        """Reset the metric"""
+```
+
+
+### `torchutil.metrics.F1`
+
+```python
+class F1(Metric):
+    """Batch-updating F1 score"""
+
+    def __call__(self) -> float:
+        """Retrieve the current F1 value
+
+        Returns:
+            The current F1 value
+        """
+
+    def update(self, predicted: torch.Tensor, target: torch.Tensor) -> None:
+        """Update the metric
+
+        Arguments
+            predicted
+                The model prediction
+            target
+                The corresponding ground truth
+        """
+
+    def reset(self) -> None:
+        """Reset the metric"""
+```
+
+
+### `torchutil.metrics.L1`
+
+```python
+class L1(Metric):
+    """Batch updating L1 score"""
+
+    def __call__(self) -> float:
+        """Retrieve the current L1 value
+
+        Returns:
+            The current L1 value
+        """
+
+    def update(self, predicted, target):
+        """Update the metric
+
+        Arguments
+            predicted
+                The model prediction
+            target
+                The corresponding ground truth
+        """
+
+    def reset(self) -> None:
+        """Reset the metric"""
+```
+
+
+### `torchutil.metrics.Precision`
+
+```python
+class Precision(Metric):
+    """Batch-updating precision metric"""
+
+    def __call__(self) -> float:
+        """Retrieve the current precision value
+
+        Returns:
+            The current precision value
+        """
+
+    def update(self, predicted: torch.Tensor, target: torch.Tensor) -> None:
+        """Update the metric
+
+        Arguments
+            predicted
+                The model prediction
+            target
+                The corresponding ground truth
+        """
+
+    def reset(self) -> None:
+        """Reset the metric"""
+```
+
+
+### `torchutil.metrics.Recall`
+
+```python
+class Recall(Metric):
+    """Batch-updating recall metric"""
+
+    def __call__(self) -> float:
+        """Retrieve the current recall value
+
+        Returns:
+            The current recall value
+        """
+
+    def update(self, predicted: torch.Tensor, target: torch.Tensor) -> None:
+        """Update the metric
+
+        Arguments
+            predicted
+                The model prediction
+            target
+                The corresponding ground truth
+        """
+
+    def reset(self) -> None:
+        """Reset the metric"""
+```
+
+
+### `torchutil.metrics.RMSE`
+
+```python
+class RMSE(Metric):
+    """Batch-updating RMSE metric"""
+
+    def __call__(self) -> float:
+        """Retrieve the current rmse value
+
+        Returns:
+            The current rmse value
+        """
+
+    def update(self, predicted: torch.Tensor, target: torch.Tensor) -> None:
+        """Update the metric
+
+        Arguments
+            predicted
+                The model prediction
+            target
+                The corresponding ground truth
+        """
+
+    def reset(self) -> None:
+        """Reset the metric"""
 ```
 
 

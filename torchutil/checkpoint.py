@@ -13,11 +13,12 @@ def load(
     file: Union[str, bytes, os.PathLike],
     model: torch.nn.Module,
     optimizer: Optional[torch.optim.Optimizer] = None,
-    map_location: str = 'cpu') -> Tuple[
-        torch.nn.Module,
-        Union[None, torch.optim.Optimizer],
-        Dict
-    ]:
+    map_location: str = 'cpu'
+) -> Tuple[
+    torch.nn.Module,
+    Union[None, torch.optim.Optimizer],
+    Dict
+]:
     """Load model checkpoint
 
     Arguments
@@ -50,7 +51,8 @@ def save(
     model: torch.nn.Module,
     optimizer: torch.optim.Optimizer,
     accelerator=None,
-    **kwargs):
+    **kwargs
+) -> None:
     """Save training checkpoint to disk
 
     Arguments
@@ -114,14 +116,14 @@ def largest_number_filename(
 
 def best_path(
     directory: Union[str, bytes, os.PathLike],
-    regex: str = '*.pt',
+    glob: str = '*.pt',
     best_fn: Callable = highest_score
 ) -> Tuple[Union[str, bytes, os.PathLike], float]:
     """Retrieve the path to the best checkpoint
 
     Arguments
         directory - The directory to search for checkpoint files
-        regex - The regular expression matching checkpoints
+        glob - The glob matching the checkpoints
         best_fn - Takes a list of checkpoint paths and returns the latest
                   Default assumes checkpoint names are training step count.
 
@@ -130,7 +132,7 @@ def best_path(
         best_score - The corresponding score
     """
     # Retrieve checkpoint filenames
-    files = list(directory.glob(regex))
+    files = list(directory.glob(glob))
 
     # If no matching checkpoint files, no training has occurred
     if not files:
@@ -142,22 +144,22 @@ def best_path(
 
 
 def latest_path(
-        directory: Union[str, bytes, os.PathLike],
-        regex: str = '*.pt',
-        latest_fn: Callable = largest_number_filename,
-    ) -> Union[str, bytes, os.PathLike]:
+    directory: Union[str, bytes, os.PathLike],
+    glob: str = '*.pt',
+    latest_fn: Callable = largest_number_filename,
+) -> Union[str, bytes, os.PathLike]:
     """Retrieve the path to the most recent checkpoint in a directory
 
     Arguments
         directory - The directory to search for checkpoint files
-        regex - The regular expression matching checkpoints
+        glob - The glob matching the checkpoints
         latest_fn - Takes a list of checkpoint paths and returns the latest
                     Default assumes checkpoint names are training step count.
     Returns
         The latest checkpoint in directory according to latest_fn
     """
     # Retrieve checkpoint filenames
-    files = list(directory.glob(regex))
+    files = list(directory.glob(glob))
 
     # If no matching checkpoint files, no training has occurred
     if not files:

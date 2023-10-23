@@ -78,12 +78,8 @@ def on_return(
                 func(*args, **kwargs)
             except Exception as exception:
 
-                # Ignore pdb exceptions
-                if isinstance(exception, bdb.BdbQuit):
-                    return
-
-                # Report failure
-                if notify_on_fail:
+                # Report failure; ignore pdb exceptions
+                if notify_on_fail and not isinstance(exception, bdb.BdbQuit):
 
                     # End time
                     elapsed = time.time() - start_time if track_time else None
@@ -123,7 +119,7 @@ def push_failure(description, track_time, elapsed, exception):
     if track_time:
         message = (
             f'Task "{description}" failed with '
-            f'exception: {exception.__class__} in'
+            f'exception: {exception.__class__} in '
             f'{elapsed:.2f} seconds')
     else:
         message = (
