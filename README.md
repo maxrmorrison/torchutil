@@ -25,6 +25,7 @@ General utilities for developing deep learning projects using PyTorch + HuggingF
     * [`torchutil.download.zip`](#torchutildownloadzip)
 - [Metrics](#metrics)
     * [`torchutil.metrics.Accuracy`](#torchutilmetricsaccuracy)
+    * [`torchutil.metrics.Average`](#torchutilmetricsaverage)
     * [`torchutil.metrics.F1`](#torchutilmetricsf1)
     * [`torchutil.metrics.L1`](#torchutilmetricsl1)
     * [`torchutil.metrics.Precision`](#torchutilmetricsprecision)
@@ -237,6 +238,34 @@ class Accuracy(Metric):
                 The model prediction
             target
                 The corresponding ground truth
+        """
+
+    def reset(self) -> None:
+        """Reset the metric"""
+```
+
+
+### `torchutil.metrics.Average`
+
+```python
+class Average(Metric):
+    """Batch-updating average metric"""
+
+    def __call__(self)-> float:
+        """Retrieve the current average value
+
+        Returns:
+            The current average value
+        """
+
+    def update(self, values: torch.Tensor, count: int) -> None:
+        """Update the metric
+
+        Arguments
+            values
+                The values to average
+            target
+                The number of values
         """
 
     def reset(self) -> None:

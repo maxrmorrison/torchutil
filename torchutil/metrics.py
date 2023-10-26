@@ -76,6 +76,38 @@ class Accuracy(Metric):
         self.true_positives = 0
 
 
+class Average(Metric):
+    """Batch-updating average metric"""
+
+    def __init__(self) -> None:
+        self.reset()
+
+    def __call__(self)-> float:
+        """Retrieve the current average value
+
+        Returns:
+            The current average value
+        """
+        return (self.total / self.count).item()
+
+    def update(self, values: torch.Tensor, count: int) -> None:
+        """Update the metric
+
+        Arguments
+            values
+                The values to average
+            count
+                The number of values
+        """
+        self.count += values.numel()
+        self.total += values.sum()
+
+    def reset(self) -> None:
+        """Reset the metric"""
+        self.count = 0
+        self.total = 0
+
+
 class F1(Metric):
     """Batch-updating F1 score"""
 
