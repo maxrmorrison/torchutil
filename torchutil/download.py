@@ -1,6 +1,7 @@
 import os
 import requests
 import tarfile
+import tempfile
 import zipfile
 from typing import Union
 
@@ -57,7 +58,7 @@ def zip(url: 'str', path: Union[str, bytes, os.PathLike]):
         url - The URL to download
         path - The location to save results
     """
-    with requests.get(url, stream=True) as rstream:
-        rstream.raise_for_status()
-        with zipfile.ZipFile(rstream) as zstream:
-            zstream.extractall(path)
+    with tempfile.NamedTemporaryFile() as tmp:
+        file(url, tmp)
+        with zipfile.ZipFile(tmp, 'r') as zfile:
+            zfile.extractall(path)

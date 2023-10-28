@@ -99,7 +99,7 @@ class Average(Metric):
             count
                 The number of values
         """
-        self.count += values.numel()
+        self.count += count
         self.total += values.sum()
 
     def reset(self) -> None:
