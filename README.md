@@ -23,6 +23,8 @@ General utilities for developing deep learning projects using PyTorch
     * [`torchutil.download.tarbz2`](#torchutildownloadtarbz2)
     * [`torchutil.download.targz`](#torchutildownloadtargz)
     * [`torchutil.download.zip`](#torchutildownloadzip)
+- [Iterator](#iterator)
+    *[`torchutil.iterator`](#torchutiliterator)
 - [Metrics](#metrics)
     * [`torchutil.metrics.Accuracy`](#torchutilmetricsaccuracy)
     * [`torchutil.metrics.Average`](#torchutilmetricsaverage)
@@ -34,6 +36,8 @@ General utilities for developing deep learning projects using PyTorch
 - [Notify](#notify)
     * [`torchutil.notify.on_exit`](#torchutilnotifyon_exit)
     * [`torchutil.notify.on_return`](#torchutilnotifyon_return)
+- [Paths](#paths)
+    * ['torchutil.paths.purge`](#torchutilpathspurge)
 - [Tensorboard](#tensorboard)
     * [`torchutil.tensorboard.update`](#torchutiltensorboardupdate)
 - [Time](#time)
@@ -211,6 +215,30 @@ def zip(url: 'str', path: Union[str, bytes, os.PathLike]):
     Arguments
         url - The URL to download
         path - The location to save results
+    """
+```
+
+
+## Iterator
+
+```python
+def iterator(
+    iterable: Iterable,
+    message: Optional[str],
+    initial: int = 0,
+    total: Optional[int] = None
+) -> Iterable:
+    """Create a tqdm iterator
+
+    Arguments
+        iterable
+            Items to iterate over
+        message
+            Static message to display
+        initial
+            Position to display corresponding to index zero of iterable
+        total
+            Length of the iterable; defaults to len(iterable)
     """
 ```
 
@@ -466,6 +494,34 @@ def on_return(
         track_time - Whether to report time elapsed
         notify_on_fail - Whether to send a notification on failure
     """
+```
+
+
+## Paths
+
+### `torchutil.paths.purge`
+
+```python
+def purge(
+    glob: str,
+    root: Optional[Union[str, bytes, os.PathLike]] = None,
+    recursive: bool = False
+) -> None:
+    """Remove all files and directories within directory matching glob
+
+    Arguments
+        glob
+            Glob matching files to delete
+        root
+            Directory to apply glob search; current directory by default
+        recursive
+            Apply glob to all subdirectories of root
+    """
+```
+
+This function also has a command-line interface.
+
+```
 ```
 
 
