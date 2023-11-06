@@ -24,7 +24,7 @@ General utilities for developing deep learning projects using PyTorch
     * [`torchutil.download.targz`](#torchutildownloadtargz)
     * [`torchutil.download.zip`](#torchutildownloadzip)
 - [Iterator](#iterator)
-    *[`torchutil.iterator`](#torchutiliterator)
+    * [`torchutil.iterator`](#torchutiliterator)
 - [Metrics](#metrics)
     * [`torchutil.metrics.Accuracy`](#torchutilmetricsaccuracy)
     * [`torchutil.metrics.Average`](#torchutilmetricsaverage)
@@ -37,7 +37,7 @@ General utilities for developing deep learning projects using PyTorch
     * [`torchutil.notify.on_exit`](#torchutilnotifyon_exit)
     * [`torchutil.notify.on_return`](#torchutilnotifyon_return)
 - [Paths](#paths)
-    * ['torchutil.paths.purge`](#torchutilpathspurge)
+    * [`torchutil.paths.purge`](#torchutilpathspurge)
 - [Tensorboard](#tensorboard)
     * [`torchutil.tensorboard.update`](#torchutiltensorboardupdate)
 - [Time](#time)
@@ -522,6 +522,25 @@ def purge(
 This function also has a command-line interface.
 
 ```
+python -m torchutil.paths.purge \
+    [-h] \
+    --glob GLOB \
+    [--root ROOT] \
+    [--recursive]
+
+Remove files and directories
+
+arguments:
+  --glob GLOB
+    Glob matching files to delete
+
+optional arguments:
+  -h, --help
+    show this help message and exit
+  --root ROOT
+    Directory to apply glob search; current directory by default
+  --recursive
+    Apply glob to all subdirectories of root
 ```
 
 
