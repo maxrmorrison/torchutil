@@ -245,6 +245,38 @@ def iterator(
 
 ## Metrics
 
+```python
+import torch
+import torchutil
+
+# Define a custom, batch-updating loss metric
+class Loss(torchutil.metrics.Average):
+    def update(self, predicted, target):
+
+        # Compute your loss and the number of elements to average over
+        loss = ...
+        count = ...
+
+        super().update(loss, count)
+
+# Instantiate metrics
+loss = Loss()
+rmse = torchutil.metrics.RMSE()
+
+# Generator that produces batches of predicted and target tensors
+iterable = ...
+
+# Update metrics
+for predicted_tensor, target_tensor in iterable:
+    loss.update(predicted_tensor, target_tensor)
+    rmse.update(predicted_tensor, target_tensor)
+
+# Get results
+print('loss': loss())
+print('rmse': rmse())
+```
+
+
 ### `torchutil.metrics.Accuracy`
 
 ```python
