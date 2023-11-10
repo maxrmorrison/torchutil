@@ -12,7 +12,7 @@ setup(
     author='Max Morrison',
     author_email='maxrmorrison@gmail.com',
     url='https://github.com/maxrmorrison/torchutil',
-    install_requires=['accelerate', 'apprise', 'torch'],
+    install_requires=['accelerate', 'apprise', 'tensorboard', 'torch'],
     packages=find_packages(),
     package_data={'torchutil': ['assets/*', 'assets/*/*']},
     long_description=long_description,
