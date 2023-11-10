@@ -535,19 +535,23 @@ def on_return(
 
 ```python
 def purge(
-    glob: str,
-    root: Optional[Union[str, bytes, os.PathLike]] = None,
+    globs: Union[str, List[str]],
+    roots: Optional[
+        Union[
+            Union[str, bytes, os.PathLike],
+            List[Union[str, bytes, os.PathLike]]
+        ]] = None,
     recursive: bool = False
 ) -> None:
     """Remove all files and directories within directory matching glob
 
     Arguments
-        glob
-            Glob matching files to delete
-        root
-            Directory to apply glob search; current directory by default
+        globs
+            Globs matching files to delete
+        roots
+            Directories to apply glob searches; current directory by default
         recursive
-            Apply glob to all subdirectories of root
+            Apply globs to all subdirectories of root directories
     """
 ```
 
@@ -556,23 +560,23 @@ This function also has a command-line interface.
 ```
 python -m torchutil.paths.purge \
     [-h] \
-    --glob GLOB \
-    [--root ROOT] \
+    --globs GLOBS \
+    [--roots ROOTS] \
     [--recursive]
 
 Remove files and directories
 
 arguments:
-  --glob GLOB
-    Glob matching files to delete
+  --globs GLOBS
+    Globs matching files to delete
 
 optional arguments:
   -h, --help
     show this help message and exit
-  --root ROOT
-    Directory to apply glob search; current directory by default
+  --roots ROOTS
+    Directories to apply glob searches; current directory by default
   --recursive
-    Apply glob to all subdirectories of root
+    Apply globs to all subdirectories of root directories
 ```
 
 

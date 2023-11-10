@@ -14,18 +14,19 @@ def parse_args():
     parser = argparse.ArgumentParser(
         description='Remove files and directories')
     parser.add_argument(
-        '--glob',
+        '--globs',
         required=True,
-        help='Glob matching files to delete')
+        help='Globs matching files to delete')
     parser.add_argument(
-        '--root',
+        '--roots',
         type=Path,
         default=Path(),
-        help='Directory to apply glob search; current directory by default')
+        help='Directories to apply glob searches; '
+              'current directory by default')
     parser.add_argument(
         '--recursive',
         action='store_true',
-        help='Apply glob to all subdirectories of root')
+        help='Apply globs to all subdirectories of root directories')
     return parser.parse_args()
 
 
