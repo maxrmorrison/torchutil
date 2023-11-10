@@ -105,7 +105,7 @@ class Average(Metric):
     def reset(self) -> None:
         """Reset the metric"""
         self.count = 0
-        self.total = 0
+        self.total = 0.
 
 
 class F1(Metric):
