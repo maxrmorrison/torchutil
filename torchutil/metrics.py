@@ -1,5 +1,6 @@
 import math
 from abc import ABC, abstractmethod
+from typing import Tuple
 
 import torch
 
@@ -53,13 +54,13 @@ class Accuracy(Metric):
     def __call__(self)-> float:
         """Retrieve the current accuracy value
 
-        Returns:
+
             The current accuracy value
         """
         return (self.true_positives / self.count).item()
 
     def update(self, predicted: torch.Tensor, target: torch.Tensor) -> None:
-        """Update the metric
+        """Update accuracy
 
         Arguments
             predicted
@@ -71,7 +72,7 @@ class Accuracy(Metric):
         self.true_positives += (predicted == target).sum()
 
     def reset(self) -> None:
-        """Reset the metric"""
+        """Reset accuracy"""
         self.count = 0
         self.true_positives = 0
 
@@ -85,13 +86,13 @@ class Average(Metric):
     def __call__(self)-> float:
         """Retrieve the current average value
 
-        Returns:
+
             The current average value
         """
         return (self.total / self.count).item()
 
     def update(self, values: torch.Tensor, count: int) -> None:
-        """Update the metric
+        """Update running average
 
         Arguments
             values
@@ -103,7 +104,7 @@ class Average(Metric):
         self.total += values.sum()
 
     def reset(self) -> None:
-        """Reset the metric"""
+        """Reset running average"""
         self.count = 0
         self.total = 0.
 
@@ -118,7 +119,7 @@ class F1(Metric):
     def __call__(self) -> float:
         """Retrieve the current F1 value
 
-        Returns:
+
             The current F1 value
         """
         precision, recall = self.precision(), self.recall()
@@ -128,7 +129,7 @@ class F1(Metric):
             return 0
 
     def update(self, predicted: torch.Tensor, target: torch.Tensor) -> None:
-        """Update the metric
+        """Update F1
 
         Arguments
             predicted
@@ -140,7 +141,7 @@ class F1(Metric):
         self.recall.update(predicted, target)
 
     def reset(self) -> None:
-        """Reset the metric"""
+        """Reset F1"""
         self.precision.reset()
         self.recall.reset()
 
@@ -154,13 +155,13 @@ class L1(Metric):
     def __call__(self) -> float:
         """Retrieve the current L1 value
 
-        Returns:
+
             The current L1 value
         """
         return (self.total / self.count).item()
 
-    def update(self, predicted, target):
-        """Update the metric
+    def update(self, predicted, target) -> None:
+        """Update L1
 
         Arguments
             predicted
@@ -172,7 +173,97 @@ class L1(Metric):
         self.total += torch.abs(predicted - target).sum()
 
     def reset(self) -> None:
-        """Reset the metric"""
+        """Reset L1"""
+        self.count = 0
+        self.total = 0.
+
+
+class MeanStd(Metric):
+    """Batch updating mean and standard deviation"""
+
+    def __init__(self) -> None:
+        self.reset()
+
+    def __call__(self) -> Tuple[float, float]:
+        """Retrieve the current mean and standard deviation
+
+        Returns
+            The current mean and standard deviation
+        """
+        std = math.sqrt(self.m2 / (self.count - 1))
+        return self.mean, std
+
+    def update(self, values: torch.Tensor) -> None:
+        """Update mean and standard deviation
+
+        Arguments
+            predicted
+                The model prediction
+            target
+                The corresponding ground truth
+        """
+        for value in values:
+            self.count += 1
+            delta = value - self.mean
+            self.mean += delta / self.count
+            delta2 = value - self.mean
+            self.m2 += delta * delta2
+
+    def reset(self) -> None:
+        """Reset mean and standard deviation"""
+        self.m2 = 0.
+        self.mean = 0.
+        self.count = 0
+
+
+class PearsonCorrelation(Metric):
+    """Batch-updating Pearson correlation"""
+
+    def __init__(
+        self,
+        predicted_mean: float,
+        predicted_std: float,
+        target_mean: float,
+        target_std: float
+    ) -> None:
+        """
+        Arguments
+            predicted_mean - Mean of predicted values
+            predicted_std - Standard deviation of predicted values
+            target_mean - Mean of target values
+            target_std - Standard deviation of target values
+        """
+        self.reset()
+        self.predicted_mean = predicted_mean
+        self.predicted_std = predicted_std
+        self.target_mean = target_mean
+        self.target_std = target_std
+
+    def __call__(self) -> float:
+        """Retrieve the current correlation value
+
+        Returns
+            The current correlation value
+        """
+        return (
+            1. / (self.predicted_std * self.target_std + 1e-6) *
+            (self.total / self.count).item())
+
+    def update(self, predicted, target) -> None:
+        """Update Pearson correlation
+
+        Arguments
+            predicted
+                The model prediction
+            target
+                The corresponding ground truth
+        """
+        self.total += sum(
+            (predicted - self.predicted_mean) * (target - self.target_mean))
+        self.count += predicted.numel()
+
+    def reset(self) -> None:
+        """Reset Pearson correlation"""
         self.count = 0
         self.total = 0.
 
@@ -186,14 +277,14 @@ class Precision(Metric):
     def __call__(self) -> float:
         """Retrieve the current precision value
 
-        Returns:
+        Returns
             The current precision value
         """
         denominator = self.true_positives + self.false_positives
         return (self.true_positives / denominator).item()
 
     def update(self, predicted: torch.Tensor, target: torch.Tensor) -> None:
-        """Update the metric
+        """Update precision
 
         Arguments
             predicted
@@ -205,7 +296,7 @@ class Precision(Metric):
         self.false_positives += (predicted & ~target).sum()
 
     def reset(self) -> None:
-        """Reset the metric"""
+        """Reset precision"""
         self.true_positives = 0
         self.false_positives = 0
 
@@ -219,14 +310,14 @@ class Recall(Metric):
     def __call__(self) -> float:
         """Retrieve the current recall value
 
-        Returns:
+
             The current recall value
         """
         denominator = self.true_positives + self.false_negatives
         return (self.true_positives / denominator).item()
 
     def update(self, predicted: torch.Tensor, target: torch.Tensor) -> None:
-        """Update the metric
+        """Update recall
 
         Arguments
             predicted
@@ -238,7 +329,7 @@ class Recall(Metric):
         self.false_negatives += (~predicted & target).sum()
 
     def reset(self) -> None:
-        """Reset the metric"""
+        """Reset recall"""
         self.true_positives = 0
         self.false_negatives = 0
 
@@ -252,13 +343,13 @@ class RMSE(Metric):
     def __call__(self) -> float:
         """Retrieve the current rmse value
 
-        Returns:
+
             The current rmse value
         """
         return math.sqrt((self.total / self.count).item())
 
     def update(self, predicted: torch.Tensor, target: torch.Tensor) -> None:
-        """Update the metric
+        """Update RMSE
 
         Arguments
             predicted
@@ -270,6 +361,6 @@ class RMSE(Metric):
         self.total += ((predicted - target) ** 2).sum()
 
     def reset(self) -> None:
-        """Reset the metric"""
+        """Reset RMSE"""
         self.count = 0
         self.total = 0.

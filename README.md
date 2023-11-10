@@ -30,7 +30,9 @@ General utilities for developing deep learning projects using PyTorch
     * [`torchutil.metrics.Average`](#torchutilmetricsaverage)
     * [`torchutil.metrics.F1`](#torchutilmetricsf1)
     * [`torchutil.metrics.L1`](#torchutilmetricsl1)
+    * [`torchutil.metrics.MeanStd`](#torchutilmetricsmeanstd)
     * [`torchutil.metrics.Precision`](#torchutilmetricsprecision)
+    * [`torchutil.metrics.PearsonCorrelation`](#torchutilmetricspearsoncorrelation)
     * [`torchutil.metrics.Recall`](#torchutilmetricsrecall)
     * [`torchutil.metrics.RMSE`](#torchutilmetricsrmse)
 - [Notify](#notify)
@@ -287,12 +289,12 @@ class Accuracy(Metric):
     def __call__(self)-> float:
         """Retrieve the current accuracy value
 
-        Returns:
+
             The current accuracy value
         """
 
     def update(self, predicted: torch.Tensor, target: torch.Tensor) -> None:
-        """Update the metric
+        """Update accuracy
 
         Arguments
             predicted
@@ -302,7 +304,7 @@ class Accuracy(Metric):
         """
 
     def reset(self) -> None:
-        """Reset the metric"""
+        """Reset accuracy"""
 ```
 
 
@@ -315,12 +317,12 @@ class Average(Metric):
     def __call__(self)-> float:
         """Retrieve the current average value
 
-        Returns:
+
             The current average value
         """
 
     def update(self, values: torch.Tensor, count: int) -> None:
-        """Update the metric
+        """Update running average
 
         Arguments
             values
@@ -330,7 +332,7 @@ class Average(Metric):
         """
 
     def reset(self) -> None:
-        """Reset the metric"""
+        """Reset running average"""
 ```
 
 
@@ -343,12 +345,12 @@ class F1(Metric):
     def __call__(self) -> float:
         """Retrieve the current F1 value
 
-        Returns:
+
             The current F1 value
         """
 
     def update(self, predicted: torch.Tensor, target: torch.Tensor) -> None:
-        """Update the metric
+        """Update F1
 
         Arguments
             predicted
@@ -358,7 +360,7 @@ class F1(Metric):
         """
 
     def reset(self) -> None:
-        """Reset the metric"""
+        """Reset F1"""
 ```
 
 
@@ -371,12 +373,12 @@ class L1(Metric):
     def __call__(self) -> float:
         """Retrieve the current L1 value
 
-        Returns:
+
             The current L1 value
         """
 
-    def update(self, predicted, target):
-        """Update the metric
+    def update(self, predicted, target) -> None:
+        """Update L1
 
         Arguments
             predicted
@@ -386,7 +388,78 @@ class L1(Metric):
         """
 
     def reset(self) -> None:
-        """Reset the metric"""
+        """Reset L1"""
+```
+
+
+### `torchutil.metrics.MeanStd`
+
+```python
+class MeanStd(Metric):
+    """Batch updating mean and standard deviation"""
+
+    def __call__(self) -> Tuple[float, float]:
+        """Retrieve the current mean and standard deviation
+
+        Returns
+            The current mean and standard deviation
+        """
+
+    def update(self, values: torch.Tensor) -> None:
+        """Update mean and standard deviation
+
+        Arguments
+            predicted
+                The model prediction
+            target
+                The corresponding ground truth
+        """
+
+    def reset(self) -> None:
+        """Reset mean and standard deviation"""
+```
+
+
+### `torchutil.metrics.PearsonCorrelation`
+
+```python
+class PearsonCorrelation(Metric):
+    """Batch-updating Pearson correlation"""
+
+    def __init__(
+        self,
+        predicted_mean: float,
+        predicted_std: float,
+        target_mean: float,
+        target_std: float
+    ) -> None:
+        """
+        Arguments
+            predicted_mean - Mean of predicted values
+            predicted_std - Standard deviation of predicted values
+            target_mean - Mean of target values
+            target_std - Standard deviation of target values
+        """
+
+    def __call__(self) -> float:
+        """Retrieve the current correlation value
+
+        Returns
+            The current correlation value
+        """
+
+    def update(self, predicted, target) -> None:
+        """Update Pearson correlation
+
+        Arguments
+            predicted
+                The model prediction
+            target
+                The corresponding ground truth
+        """
+
+    def reset(self) -> None:
+        """Reset Pearson correlation"""
 ```
 
 
@@ -399,12 +472,12 @@ class Precision(Metric):
     def __call__(self) -> float:
         """Retrieve the current precision value
 
-        Returns:
+        Returns
             The current precision value
         """
 
     def update(self, predicted: torch.Tensor, target: torch.Tensor) -> None:
-        """Update the metric
+        """Update precision
 
         Arguments
             predicted
@@ -414,7 +487,7 @@ class Precision(Metric):
         """
 
     def reset(self) -> None:
-        """Reset the metric"""
+        """Reset precision"""
 ```
 
 
@@ -427,12 +500,12 @@ class Recall(Metric):
     def __call__(self) -> float:
         """Retrieve the current recall value
 
-        Returns:
+
             The current recall value
         """
 
     def update(self, predicted: torch.Tensor, target: torch.Tensor) -> None:
-        """Update the metric
+        """Update recall
 
         Arguments
             predicted
@@ -442,7 +515,7 @@ class Recall(Metric):
         """
 
     def reset(self) -> None:
-        """Reset the metric"""
+        """Reset recall"""
 ```
 
 
@@ -455,12 +528,12 @@ class RMSE(Metric):
     def __call__(self) -> float:
         """Retrieve the current rmse value
 
-        Returns:
+
             The current rmse value
         """
 
     def update(self, predicted: torch.Tensor, target: torch.Tensor) -> None:
-        """Update the metric
+        """Update RMSE
 
         Arguments
             predicted
@@ -470,7 +543,7 @@ class RMSE(Metric):
         """
 
     def reset(self) -> None:
-        """Reset the metric"""
+        """Reset RMSE"""
 ```
 
 
