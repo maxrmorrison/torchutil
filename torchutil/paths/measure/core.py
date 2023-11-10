@@ -1,47 +1,64 @@
+import os
 from pathlib import Path
+from typing import List, Optional, Union
 
-import math
+import torchutil
 
-from typing import List, Optional
+
+###############################################################################
+# Constants
+###############################################################################
+
+
+# Available units of memory
+UNITS = ['B', 'KB', 'MB', 'GB', 'TB']
+
 
 ###############################################################################
 # Measure dataset sizes
 ###############################################################################
 
 
-def features_in_directories(directories: List[Path], extensions: Optional[List[str]] = ['.pt']):
-    """Get total disk usage of features in directories based on file extensions"""
+def measure(
+    globs: Union[str, List[str]],
+    roots: Optional[
+        Union[
+            Union[str, bytes, os.PathLike],
+            List[Union[str, bytes, os.PathLike]]
+        ]] = None,
+    recursive: bool = False,
+    unit='B'
+) -> Union[int, float]:
+    """Measure data usage of files and directories
 
+    Arguments
+        globs
+            Globs matching paths to measure
+        roots
+            Directories to apply glob searches; current directory by default
+        recursive
+            Apply globs to all subdirectories of root directories
+        unit
+            Unit of memory utilization (bytes to terabytes); default bytes
+    """
+    # Argument handling
+    roots = Path() if roots is None else Path(roots)
+    if isinstance(globs, str):
+        globs = [globs]
+    if not isinstance(roots, list):
+        roots = [roots]
+
+    # Get paths to delete
+    paths = []
+    for root in roots:
+        root = Path(root)
+        for glob in globs:
+            paths.extend(root.rglob(glob) if recursive else root.glob(glob))
+
+    # Measure paths
     total = 0
-    for directory in directories:
-        # Measure one directory
-        subtotal = 0
-        for extension in extensions:
-            # Measure one feature in one directory
-            feature_size = measure_glob(
-                directory,
-                f'**/*{extension}')
-            print(f'\t{extension}: {size_to_string(feature_size)}')
+    for path in torchutil.iterator(paths, 'Measuring paths'):
+        total += Path(path).stat().st_size
 
-            # Update directory total
-            subtotal += feature_size
-
-        # Update aggregate total
-        print(f'{directory} is {size_to_string(subtotal)}')
-        total += subtotal
-    print(f'Total is {size_to_string(total)}')
-
-
-###############################################################################
-# Utilities
-###############################################################################
-
-
-def measure_glob(path, glob_string):
-    """Get the size in bytes of all files matching glob"""
-    return sum(file.stat().st_size for file in path.glob(glob_string))
-
-
-def size_to_string(size_in_bytes):
-    """Format size in gigabytes"""
-    return f'{math.ceil(size_in_bytes / (1024 ** 3))} GB'
+    # Convert to desired unit of measurement
+    return total if unit == 'B' else total / (1024 ** UNITS.index(unit))

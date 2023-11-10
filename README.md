@@ -37,6 +37,7 @@ General utilities for developing deep learning projects using PyTorch
     * [`torchutil.notify.on_exit`](#torchutilnotifyon_exit)
     * [`torchutil.notify.on_return`](#torchutilnotifyon_return)
 - [Paths](#paths)
+    * [`torchutil.paths.measure`](#torchutilpathsmeasure)
     * [`torchutil.paths.purge`](#torchutilpathspurge)
 - [Tensorboard](#tensorboard)
     * [`torchutil.tensorboard.update`](#torchutiltensorboardupdate)
@@ -531,6 +532,61 @@ def on_return(
 
 ## Paths
 
+### `torchutil.paths.measure`
+
+```python
+def measure(
+    globs: Union[str, List[str]],
+    roots: Optional[
+        Union[
+            Union[str, bytes, os.PathLike],
+            List[Union[str, bytes, os.PathLike]]
+        ]] = None,
+    recursive: bool = False,
+    unit='B'
+) -> Union[int, float]:
+    """Measure data usage of files and directories
+
+    Arguments
+        globs
+            Globs matching paths to measure
+        roots
+            Directories to apply glob searches; current directory by default
+        recursive
+            Apply globs to all subdirectories of root directories
+        unit
+            Unit of memory utilization (bytes to terabytes); default bytes
+    """
+```
+
+This function also has a command-line interface.
+
+```
+python -m torchutil.paths.measure \
+    [-h] \
+    --globs GLOBS \
+    [--roots ROOTS] \
+    [--recursive] \
+    [--unit]
+
+Measure data usage of files and directories
+
+arguments:
+  --globs GLOBS
+    Globs matching paths to measure
+
+optional arguments:
+  -h, --help
+    show this help message and exit
+  --roots ROOTS
+    Directories to apply glob searches; current directory by default
+  --recursive
+    Apply globs to all subdirectories of root directories
+  --unit
+    Unit of memory utilization (bytes to terabytes); default bytes
+```
+
+
 ### `torchutil.paths.purge`
 
 ```python
@@ -562,13 +618,14 @@ python -m torchutil.paths.purge \
     [-h] \
     --globs GLOBS \
     [--roots ROOTS] \
-    [--recursive]
+    [--recursive] \
+    [--force]
 
 Remove files and directories
 
 arguments:
   --globs GLOBS
-    Globs matching files to delete
+    Globs matching paths to delete
 
 optional arguments:
   -h, --help
