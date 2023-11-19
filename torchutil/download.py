@@ -59,6 +59,6 @@ def zip(url: 'str', path: Union[str, bytes, os.PathLike]):
         path - The location to save results
     """
     with tempfile.NamedTemporaryFile() as tmp:
-        file(url, tmp)
+        file(url, tmp.name)
         with zipfile.ZipFile(tmp, 'r') as zfile:
             zfile.extractall(path)
