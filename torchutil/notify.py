@@ -2,7 +2,6 @@ import bdb
 import contextlib
 import os
 import time
-from typing import Callable
 
 import apprise
 
@@ -13,7 +12,7 @@ import apprise
 
 
 @contextlib.contextmanager
-def on_exit(
+def notify(
     description: str,
     track_time: bool = True,
     notify_on_fail: bool = True):
@@ -54,49 +53,6 @@ def on_exit(
 
     # Report success
     push_success(description, track_time, elapsed)
-
-
-def on_return(
-    description: str,
-    track_time: bool = True,
-    notify_on_fail: bool = True) -> Callable:
-    """Decorator for sending job notifications
-
-    Arguments
-        description - The name of the job being run
-        track_time - Whether to report time elapsed
-        notify_on_fail - Whether to send a notification on failure
-    """
-    def wrapper(func: callable):
-        def _wrapper(*args, **kwargs):
-            # Start time
-            if track_time:
-                start_time = time.time()
-
-            # Run callable
-            try:
-                func(*args, **kwargs)
-            except Exception as exception:
-
-                # Report failure; ignore pdb exceptions
-                if notify_on_fail and not isinstance(exception, bdb.BdbQuit):
-
-                    # End time
-                    elapsed = time.time() - start_time if track_time else None
-
-                    # Report failure
-                    push_failure(description, track_time, elapsed, exception)
-
-                raise exception
-
-            # End time
-            elapsed = time.time() - start_time if track_time else None
-
-            # Report success
-            push_success(description, track_time, elapsed)
-
-        return _wrapper
-    return wrapper
 
 
 ###############################################################################

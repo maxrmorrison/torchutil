@@ -36,9 +36,9 @@ General utilities for developing deep learning projects using PyTorch
     * [`torchutil.metrics.Recall`](#torchutilmetricsrecall)
     * [`torchutil.metrics.RMSE`](#torchutilmetricsrmse)
 - [Notify](#notify)
-    * [`torchutil.notify.on_exit`](#torchutilnotifyon_exit)
-    * [`torchutil.notify.on_return`](#torchutilnotifyon_return)
+    * [`torchutil.notify`](#torchutilnotify)
 - [Paths](#paths)
+    * [`torchutil.paths.chdir`](#torchutilpathschdir)
     * [`torchutil.paths.measure`](#torchutilpathsmeasure)
     * [`torchutil.paths.purge`](#torchutilpathspurge)
 - [Tensorboard](#tensorboard)
@@ -557,22 +557,22 @@ environment variable to a supported webhook as explained in
 import torchutil
 
 # Send notification when function returns
-@torchutil.notify.on_return('train')
+@torchutil.notify('train')
 def train():
     ...
 
 # Equivalent using context manager
 def train():
-    with torchutil.notify.on_exit('train'):
+    with torchutil.notify('train'):
         ...
 ```
 
 
-### `torchutil.notify.on_exit`
+### `torchutil.notify`
 
 ```python
 @contextlib.contextmanager
-def on_finish(
+def notify(
     description: str,
     track_time: bool = True,
     notify_on_fail: bool = True):
@@ -586,24 +586,59 @@ def on_finish(
 ```
 
 
-### `torchutil.notify.on_return`
+## Paths
+
+### `torchutil.paths.chdir`
 
 ```python
-def on_return(
-    description: str,
-    track_time: bool = True,
-    notify_on_fail: bool = True) -> Callable:
-    """Decorator for sending job notifications
+@contextlib.contextmanager
+def chdir(directory: Union[str, bytes, os.PathLike]) -> None:
+    """Context manager for changing the current working directory
 
     Arguments
-        description - The name of the job being run
-        track_time - Whether to report time elapsed
-        notify_on_fail - Whether to send a notification on failure
+        directory
+            The desired working directory
     """
 ```
 
+This function is both a context manager and decorator.
 
-## Paths
+```python
+import tempfile
+from pathlib import Path
+
+import torchutil
+
+# Create a directory
+directory = tempfile.TemporaryDirectory()
+
+# Create a file
+file = 'tmp.txt'
+(Path(directory.name) / file).touch()
+
+# File is not in current working directory
+assert not Path(file).exists()
+
+# Change working directory using context manager
+with torchutil.paths.chdir(directory.name):
+    assert Path(file).exists()
+
+# File is not in current working directory
+assert not Path(file).exists()
+
+# Change working directory using decorator
+@torchutil.paths.chdir(directory.name)
+def exists(file):
+    assert Path(file).exists()
+exists(file)
+
+# File is not in current working directory
+assert not Path(file).exists()
+
+# Remove temporary paths
+directory.cleanup()
+```
+
 
 ### `torchutil.paths.measure`
 

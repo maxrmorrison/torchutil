@@ -22,7 +22,7 @@ def context(name: Optional[str]):
     context.timer.name = name
     with context.timer:
         yield
-    context.timer.name = None
+    context.timer.name = 'total'
 
 
 def reset():
@@ -77,4 +77,4 @@ class Timer:
         """Reset the timer"""
         self.history = {}
         self.start = 0.
-        self.name = None
+        self.name = 'total'
