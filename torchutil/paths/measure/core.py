@@ -22,10 +22,13 @@ UNITS = ['B', 'KB', 'MB', 'GB', 'TB']
 def measure(
     globs: Union[str, List[str]],
     roots: Optional[
-        Union[
-            Union[str, bytes, os.PathLike],
-            List[Union[str, bytes, os.PathLike]]
-        ]] = None,
+        List[
+            Union[
+                Union[str, bytes, os.PathLike],
+                List[Union[str, bytes, os.PathLike]]
+            ]
+        ]
+    ] = None,
     recursive: bool = False,
     unit='B'
 ) -> Union[int, float]:
@@ -42,11 +45,11 @@ def measure(
             Unit of memory utilization (bytes to terabytes); default bytes
     """
     # Argument handling
-    roots = Path() if roots is None else Path(roots)
     if isinstance(globs, str):
         globs = [globs]
     if not isinstance(roots, list):
         roots = [roots]
+    roots = [Path() if root is None else Path(root) for root in roots]
 
     # Get paths to delete
     paths = []

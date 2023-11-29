@@ -14,10 +14,13 @@ import torchutil
 def purge(
     globs: Union[str, List[str]],
     roots: Optional[
-        Union[
-            Union[str, bytes, os.PathLike],
-            List[Union[str, bytes, os.PathLike]]
-        ]] = None,
+        List[
+            Union[
+                Union[str, bytes, os.PathLike],
+                List[Union[str, bytes, os.PathLike]]
+            ]
+        ]
+    ] = None,
     recursive: bool = False,
     force: bool = False
 ) -> None:
@@ -34,11 +37,11 @@ def purge(
             Skip user confirmation of deletion
     """
     # Argument handling
-    roots = Path() if roots is None else Path(roots)
     if isinstance(globs, str):
         globs = [globs]
     if not isinstance(roots, list):
         roots = [roots]
+    roots = [Path() if root is None else Path(root) for root in roots]
 
     # Get paths to delete
     paths = []
@@ -49,7 +52,7 @@ def purge(
 
     # Maybe prompt user
     if not force:
-        files = len(path for path in paths if path.is_file())
+        files = len([path for path in paths if path.is_file()])
         dirs = len(paths) - files
         if input(
             f'Found {files} files and {dirs} directories to delete within '

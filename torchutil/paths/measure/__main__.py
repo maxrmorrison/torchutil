@@ -14,10 +14,13 @@ import torchutil
 def main(
     globs: Union[str, List[str]],
     roots: Optional[
-        Union[
-            Union[str, bytes, os.PathLike],
-            List[Union[str, bytes, os.PathLike]]
-        ]] = None,
+        List[
+            Union[
+                Union[str, bytes, os.PathLike],
+                List[Union[str, bytes, os.PathLike]]
+            ]
+        ]
+    ] = None,
     recursive: bool = False,
     unit='B'
 ) -> Union[int, float]:
