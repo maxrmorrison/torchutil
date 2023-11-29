@@ -15,7 +15,6 @@ def parse_args():
         description='Remove files and directories')
     parser.add_argument(
         '--globs',
-        required=True,
         nargs='+',
         help='Globs matching paths to delete')
     parser.add_argument(

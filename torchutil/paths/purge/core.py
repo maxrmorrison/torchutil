@@ -12,7 +12,7 @@ import torchutil
 
 
 def purge(
-    globs: Union[str, List[str]],
+    globs: Optional[List[Union[str, List[str]]]] = None,
     roots: Optional[
         List[
             Union[
@@ -37,10 +37,11 @@ def purge(
             Skip user confirmation of deletion
     """
     # Argument handling
-    if isinstance(globs, str):
+    if not isinstance(globs, list):
         globs = [globs]
     if not isinstance(roots, list):
         roots = [roots]
+    globs = ['*' if glob is None else glob for glob in globs]
     roots = [Path() if root is None else Path(root) for root in roots]
 
     # Get paths to delete

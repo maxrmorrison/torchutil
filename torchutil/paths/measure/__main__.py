@@ -33,7 +33,6 @@ def parse_args():
         description='Measure data usage of files and directories')
     parser.add_argument(
         '--globs',
-        required=True,
         nargs='+',
         help='Globs matching paths to measure')
     parser.add_argument(
