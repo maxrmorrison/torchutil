@@ -644,12 +644,15 @@ directory.cleanup()
 
 ```python
 def measure(
-    globs: Union[str, List[str]],
+    globs: Optional[List[Union[str, List[str]]]] = None,
     roots: Optional[
-        Union[
-            Union[str, bytes, os.PathLike],
-            List[Union[str, bytes, os.PathLike]]
-        ]] = None,
+        List[
+            Union[
+                Union[str, bytes, os.PathLike],
+                List[Union[str, bytes, os.PathLike]]
+            ]
+        ]
+    ] = None,
     recursive: bool = False,
     unit='B'
 ) -> Union[int, float]:
@@ -699,23 +702,29 @@ optional arguments:
 
 ```python
 def purge(
-    globs: Union[str, List[str]],
+    globs: Optional[List[Union[str, List[str]]]] = None,
     roots: Optional[
-        Union[
-            Union[str, bytes, os.PathLike],
-            List[Union[str, bytes, os.PathLike]]
-        ]] = None,
-    recursive: bool = False
+        List[
+            Union[
+                Union[str, bytes, os.PathLike],
+                List[Union[str, bytes, os.PathLike]]
+            ]
+        ]
+    ] = None,
+    recursive: bool = False,
+    force: bool = False
 ) -> None:
     """Remove all files and directories within directory matching glob
 
     Arguments
         globs
-            Globs matching files to delete
+            Globs matching paths to delete
         roots
             Directories to apply glob searches; current directory by default
         recursive
             Apply globs to all subdirectories of root directories
+        force
+            Skip user confirmation of deletion
     """
 ```
 
@@ -742,6 +751,8 @@ optional arguments:
     Directories to apply glob searches; current directory by default
   --recursive
     Apply globs to all subdirectories of root directories
+  --force
+    Skip user confirmation of deletion
 ```
 
 
