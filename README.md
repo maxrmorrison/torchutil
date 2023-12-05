@@ -25,6 +25,7 @@ General utilities for developing deep learning projects using PyTorch
     * [`torchutil.download.zip`](#torchutildownloadzip)
 - [Iterator](#iterator)
     * [`torchutil.iterator`](#torchutiliterator)
+    * [`torchutil.multiprocess_iterator`](#torchutil.multiprocess_iterator)
 - [Metrics](#metrics)
     * [`torchutil.metrics.Accuracy`](#torchutilmetricsaccuracy)
     * [`torchutil.metrics.Average`](#torchutilmetricsaverage)
@@ -225,9 +226,30 @@ def zip(url: 'str', path: Union[str, bytes, os.PathLike]):
 ## Iterator
 
 ```python
+import time
+import torchutil
+
+def wait(seconds):
+    time.sleep(seconds)
+
+n = 8
+iterable = range(n)
+
+# Monitor single-process job
+for i in torchutil.iterator(iterable, message='single-process'):
+    wait(i)
+
+# Monitor multi-process job
+torchutil.multiprocess_iterator(wait, iterable, message='multi-process')
+```
+
+
+### `torchutil.iterator`
+
+```python
 def iterator(
     iterable: Iterable,
-    message: Optional[str],
+    message: Optional[str] = None,
     initial: int = 0,
     total: Optional[int] = None
 ) -> Iterable:
@@ -242,6 +264,42 @@ def iterator(
             Position to display corresponding to index zero of iterable
         total
             Length of the iterable; defaults to len(iterable)
+    """
+```
+
+
+### `torchutil.multiprocess_iterator`
+
+```python
+def multiprocess_iterator(
+    process: Callable,
+    iterable: Iterable,
+    message: Optional[str] = None,
+    initial: int = 0,
+    total: Optional[int] = None,
+    num_workers: int = os.cpu_count(),
+    worker_chunk_size: Optional[int] = None
+) -> List:
+    """Create a multiprocess tqdm iterator
+
+    Arguments
+        process
+            The single-argument function called by each multiprocess worker
+        iterable
+            Items to iterate over
+        message
+            Static message to display
+        initial
+            Position to display corresponding to index zero of iterable
+        total
+            Length of the iterable; defaults to len(iterable)
+        num_workers
+            Multiprocessing pool size; defaults to number of logical CPU cores
+        worker_chunk_size
+            Number of items sent to each multiprocessing worker
+
+    Returns
+        Return values of calling process on each item, in original order
     """
 ```
 
