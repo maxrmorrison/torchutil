@@ -264,6 +264,9 @@ def iterator(
             Position to display corresponding to index zero of iterable
         total
             Length of the iterable; defaults to len(iterable)
+
+    Returns
+        Monitored iterable
     """
 ```
 
@@ -347,7 +350,7 @@ class Accuracy(Metric):
     def __call__(self)-> float:
         """Retrieve the current accuracy value
 
-
+        Returns
             The current accuracy value
         """
 
@@ -375,7 +378,7 @@ class Average(Metric):
     def __call__(self)-> float:
         """Retrieve the current average value
 
-
+        Returns
             The current average value
         """
 
@@ -403,7 +406,7 @@ class F1(Metric):
     def __call__(self) -> float:
         """Retrieve the current F1 value
 
-
+        Returns
             The current F1 value
         """
 
@@ -431,7 +434,7 @@ class L1(Metric):
     def __call__(self) -> float:
         """Retrieve the current L1 value
 
-
+        Returns
             The current L1 value
         """
 
@@ -586,7 +589,7 @@ class RMSE(Metric):
     def __call__(self) -> float:
         """Retrieve the current rmse value
 
-
+        Returns
             The current rmse value
         """
 
@@ -725,6 +728,9 @@ def measure(
             Apply globs to all subdirectories of root directories
         unit
             Unit of memory utilization (bytes to terabytes); default bytes
+
+    Returns
+        Data usage in the specified unit
     """
 ```
 

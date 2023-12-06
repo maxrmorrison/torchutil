@@ -30,6 +30,9 @@ def iterator(
             Multiprocessing pool size; defaults to single-threaded
         worker_chunk_size
             Number of items sent to each multiprocessing worker
+
+    Returns
+        Monitored iterable
     """
     return tqdm.tqdm(
         iterable,

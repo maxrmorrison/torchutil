@@ -54,7 +54,7 @@ class Accuracy(Metric):
     def __call__(self)-> float:
         """Retrieve the current accuracy value
 
-
+        Returns
             The current accuracy value
         """
         return (self.true_positives / self.count).item()
@@ -86,7 +86,7 @@ class Average(Metric):
     def __call__(self)-> float:
         """Retrieve the current average value
 
-
+        Returns
             The current average value
         """
         return (self.total / self.count).item()
@@ -119,7 +119,7 @@ class F1(Metric):
     def __call__(self) -> float:
         """Retrieve the current F1 value
 
-
+        Returns
             The current F1 value
         """
         precision, recall = self.precision(), self.recall()
@@ -155,7 +155,7 @@ class L1(Metric):
     def __call__(self) -> float:
         """Retrieve the current L1 value
 
-
+        Returns
             The current L1 value
         """
         return (self.total / self.count).item()
@@ -310,7 +310,7 @@ class Recall(Metric):
     def __call__(self) -> float:
         """Retrieve the current recall value
 
-
+        Returns
             The current recall value
         """
         denominator = self.true_positives + self.false_negatives
@@ -343,7 +343,7 @@ class RMSE(Metric):
     def __call__(self) -> float:
         """Retrieve the current rmse value
 
-
+        Returns
             The current rmse value
         """
         return math.sqrt((self.total / self.count).item())
