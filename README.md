@@ -25,7 +25,7 @@ General utilities for developing deep learning projects using PyTorch
     * [`torchutil.download.zip`](#torchutildownloadzip)
 - [Iterator](#iterator)
     * [`torchutil.iterator`](#torchutiliterator)
-    * [`torchutil.multiprocess_iterator`](#torchutil.multiprocess_iterator)
+    * [`torchutil.multiprocess_iterator`](#torchutilmultiprocess_iterator)
 - [Metrics](#metrics)
     * [`torchutil.metrics.Accuracy`](#torchutilmetricsaccuracy)
     * [`torchutil.metrics.Average`](#torchutilmetricsaverage)
