@@ -15,14 +15,20 @@ def context(name: Optional[str]):
     Arguments
         name - Name of the timer to add time to
     """
+    # Initialize singleton timer
     if not hasattr(context, 'timer'):
         context.timer = Timer()
 
-    # TODO - support nested contexts
+    # Allow nested timers
+    previous = context.timer.name
     context.timer.name = name
+
+    # Run timing
     with context.timer:
         yield
-    context.timer.name = 'total'
+
+    # Restore state
+    context.timer.name = previous
 
 
 def reset():
@@ -39,9 +45,10 @@ def results() -> dict:
     Returns
         Timing results: {name: elapsed_time} for all names
     """
-    if not hasattr(context, 'timer'):
+    try:
+        return context.timer()
+    except AttributeError:
         return {}
-    return context.timer()
 
 
 ###############################################################################
@@ -57,15 +64,18 @@ class Timer:
 
     def __call__(self):
         """Retrieve timer results"""
-        return {name: sum(times) for name, times in self.history.items()}
+        results = {name: sum(times) for name, times in self.history.items()}
+        results['total'] = self.total
+        return results
 
     def __enter__(self):
         """Start the timer"""
-        self.start = time.time()
+        self.stack.append(time.time())
 
     def __exit__(self, *_):
         """Stop the timer"""
-        elapsed = time.time() - self.start
+        # Get time elapsed
+        elapsed = time.time() - self.stack.pop()
 
         # Add to timer history
         if self.name not in self.history:
@@ -73,8 +83,13 @@ class Timer:
         else:
             self.history[self.name].append(elapsed)
 
+        # Update total
+        if not self.stack:
+            self.total += elapsed
+
     def reset(self):
         """Reset the timer"""
+        self.name = None
         self.history = {}
-        self.start = 0.
-        self.name = 'total'
+        self.stack = []
+        self.total = 0.

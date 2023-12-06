@@ -888,6 +888,7 @@ def update(
 
 ```python
 import time
+import torchutil
 
 # Perform timing
 with torchutil.time.context('outer'):
@@ -897,8 +898,8 @@ with torchutil.time.context('outer'):
         with torchutil.time.context('inner'):
             time.sleep(1)
 
-# Prints {'outer': TODO, 'inner': TODO}
-print(torchutil.timer.results())
+# Prints {'inner': 2.0020763874053955, 'outer': 5.005248308181763, 'total': 5.005248308181763}
+print(torchutil.time.results())
 ```
 
 
