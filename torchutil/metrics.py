@@ -13,6 +13,9 @@ import torch
 class Metric(ABC):
     """Base batch-updating metric"""
 
+    def __init__(self) -> None:
+        self.reset()
+
     @abstractmethod
     def __call__(self) -> float:
         """Retrieve the current metric values
@@ -48,9 +51,6 @@ class Metric(ABC):
 class Accuracy(Metric):
     """Batch-updating accuracy metric"""
 
-    def __init__(self) -> None:
-        self.reset()
-
     def __call__(self)-> float:
         """Retrieve the current accuracy value
 
@@ -79,9 +79,6 @@ class Accuracy(Metric):
 
 class Average(Metric):
     """Batch-updating average metric"""
-
-    def __init__(self) -> None:
-        self.reset()
 
     def __call__(self)-> float:
         """Retrieve the current average value
@@ -149,9 +146,6 @@ class F1(Metric):
 class L1(Metric):
     """Batch updating L1 score"""
 
-    def __init__(self) -> None:
-        self.reset()
-
     def __call__(self) -> float:
         """Retrieve the current L1 value
 
@@ -180,9 +174,6 @@ class L1(Metric):
 
 class MeanStd(Metric):
     """Batch updating mean and standard deviation"""
-
-    def __init__(self) -> None:
-        self.reset()
 
     def __call__(self) -> Tuple[float, float]:
         """Retrieve the current mean and standard deviation
@@ -271,9 +262,6 @@ class PearsonCorrelation(Metric):
 class Precision(Metric):
     """Batch-updating precision metric"""
 
-    def __init__(self) -> None:
-        self.reset()
-
     def __call__(self) -> float:
         """Retrieve the current precision value
 
@@ -303,9 +291,6 @@ class Precision(Metric):
 
 class Recall(Metric):
     """Batch-updating recall metric"""
-
-    def __init__(self) -> None:
-        self.reset()
 
     def __call__(self) -> float:
         """Retrieve the current recall value
@@ -337,9 +322,6 @@ class Recall(Metric):
 class RMSE(Metric):
     """Batch-updating RMSE metric"""
 
-    def __init__(self) -> None:
-        self.reset()
-
     def __call__(self) -> float:
         """Retrieve the current rmse value
 
@@ -364,3 +346,29 @@ class RMSE(Metric):
         """Reset RMSE"""
         self.count = 0
         self.total = 0.
+
+class CudaMaxMemoryUsage(Metric):
+    """Maxium allocated and reserved CUDA memory usage"""
+
+    # I am open to changing this design to just accept a device
+    def update(self, predicted: torch.Tensor, target: torch.Tensor) -> None:
+        """Update CUDA maximum memory usage
+        Arguments
+            predicted
+                The model prediction (just used to get device)
+            target
+                The corresponding ground truth (not used)
+        """
+        device_index = predicted.device.index
+        self.max_allocated = torch.cuda.max_memory_allocated(device_index)
+        self.max_reserved = torch.cuda.max_memory_reserved(device_index)
+
+    def reset(self) -> None:
+        self.max_allocated = 0
+        self.max_reserved = 0
+
+    def __call__(self):
+        return {
+            'max_allocated (GB)': float(self.max_allocated) / (1024 ** 3),
+            'max_reserved (GB)': float(self.max_reserved) / (1024 ** 3)
+        }

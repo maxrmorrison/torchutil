@@ -94,4 +94,12 @@ def write_images(directory, step, images):
 def write_scalars(directory, step, scalars):
     """Write scalars to Tensorboard"""
     for name, scalar in scalars.items():
-        writer(directory).add_scalar(name, scalar, step)
+        if isinstance(scalar, dict):
+            for subname, subscalar in scalar.items():
+                writer(directory).add_scalar(
+                    name + '/' + subname,
+                    subscalar,
+                    step
+                )
+        else:
+            writer(directory).add_scalar(name, scalar, step)
