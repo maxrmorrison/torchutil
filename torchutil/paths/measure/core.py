@@ -43,6 +43,9 @@ def measure(
             Apply globs to all subdirectories of root directories
         unit
             Unit of memory utilization (bytes to terabytes); default bytes
+
+    Returns
+        Data usage in the specified unit
     """
     # Argument handling
     if not isinstance(globs, list):

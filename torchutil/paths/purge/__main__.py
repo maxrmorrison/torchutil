@@ -34,5 +34,4 @@ def parse_args():
     return parser.parse_args()
 
 
-if __name__ == '__main__':
-    torchutil.paths.purge(**vars(parse_args()))
+torchutil.paths.purge(**vars(parse_args()))

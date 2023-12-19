@@ -25,6 +25,7 @@ General utilities for developing deep learning projects using PyTorch
     * [`torchutil.download.zip`](#torchutildownloadzip)
 - [Iterator](#iterator)
     * [`torchutil.iterator`](#torchutiliterator)
+    * [`torchutil.multiprocess_iterator`](#torchutilmultiprocess_iterator)
 - [Metrics](#metrics)
     * [`torchutil.metrics.Accuracy`](#torchutilmetricsaccuracy)
     * [`torchutil.metrics.Average`](#torchutilmetricsaverage)
@@ -225,9 +226,30 @@ def zip(url: 'str', path: Union[str, bytes, os.PathLike]):
 ## Iterator
 
 ```python
+import time
+import torchutil
+
+def wait(seconds):
+    time.sleep(seconds)
+
+n = 8
+iterable = range(n)
+
+# Monitor single-process job
+for i in torchutil.iterator(iterable, message='single-process'):
+    wait(i)
+
+# Monitor multi-process job
+torchutil.multiprocess_iterator(wait, iterable, message='multi-process')
+```
+
+
+### `torchutil.iterator`
+
+```python
 def iterator(
     iterable: Iterable,
-    message: Optional[str],
+    message: Optional[str] = None,
     initial: int = 0,
     total: Optional[int] = None
 ) -> Iterable:
@@ -242,6 +264,45 @@ def iterator(
             Position to display corresponding to index zero of iterable
         total
             Length of the iterable; defaults to len(iterable)
+
+    Returns
+        Monitored iterable
+    """
+```
+
+
+### `torchutil.multiprocess_iterator`
+
+```python
+def multiprocess_iterator(
+    process: Callable,
+    iterable: Iterable,
+    message: Optional[str] = None,
+    initial: int = 0,
+    total: Optional[int] = None,
+    num_workers: int = os.cpu_count(),
+    worker_chunk_size: Optional[int] = None
+) -> List:
+    """Create a multiprocess tqdm iterator
+
+    Arguments
+        process
+            The single-argument function called by each multiprocess worker
+        iterable
+            Items to iterate over
+        message
+            Static message to display
+        initial
+            Position to display corresponding to index zero of iterable
+        total
+            Length of the iterable; defaults to len(iterable)
+        num_workers
+            Multiprocessing pool size; defaults to number of logical CPU cores
+        worker_chunk_size
+            Number of items sent to each multiprocessing worker
+
+    Returns
+        Return values of calling process on each item, in original order
     """
 ```
 
@@ -289,7 +350,7 @@ class Accuracy(Metric):
     def __call__(self)-> float:
         """Retrieve the current accuracy value
 
-
+        Returns
             The current accuracy value
         """
 
@@ -317,7 +378,7 @@ class Average(Metric):
     def __call__(self)-> float:
         """Retrieve the current average value
 
-
+        Returns
             The current average value
         """
 
@@ -345,7 +406,7 @@ class F1(Metric):
     def __call__(self) -> float:
         """Retrieve the current F1 value
 
-
+        Returns
             The current F1 value
         """
 
@@ -373,7 +434,7 @@ class L1(Metric):
     def __call__(self) -> float:
         """Retrieve the current L1 value
 
-
+        Returns
             The current L1 value
         """
 
@@ -528,7 +589,7 @@ class RMSE(Metric):
     def __call__(self) -> float:
         """Retrieve the current rmse value
 
-
+        Returns
             The current rmse value
         """
 
@@ -644,12 +705,15 @@ directory.cleanup()
 
 ```python
 def measure(
-    globs: Union[str, List[str]],
+    globs: Optional[List[Union[str, List[str]]]] = None,
     roots: Optional[
-        Union[
-            Union[str, bytes, os.PathLike],
-            List[Union[str, bytes, os.PathLike]]
-        ]] = None,
+        List[
+            Union[
+                Union[str, bytes, os.PathLike],
+                List[Union[str, bytes, os.PathLike]]
+            ]
+        ]
+    ] = None,
     recursive: bool = False,
     unit='B'
 ) -> Union[int, float]:
@@ -664,6 +728,9 @@ def measure(
             Apply globs to all subdirectories of root directories
         unit
             Unit of memory utilization (bytes to terabytes); default bytes
+
+    Returns
+        Data usage in the specified unit
     """
 ```
 
@@ -699,23 +766,29 @@ optional arguments:
 
 ```python
 def purge(
-    globs: Union[str, List[str]],
+    globs: Optional[List[Union[str, List[str]]]] = None,
     roots: Optional[
-        Union[
-            Union[str, bytes, os.PathLike],
-            List[Union[str, bytes, os.PathLike]]
-        ]] = None,
-    recursive: bool = False
+        List[
+            Union[
+                Union[str, bytes, os.PathLike],
+                List[Union[str, bytes, os.PathLike]]
+            ]
+        ]
+    ] = None,
+    recursive: bool = False,
+    force: bool = False
 ) -> None:
     """Remove all files and directories within directory matching glob
 
     Arguments
         globs
-            Globs matching files to delete
+            Globs matching paths to delete
         roots
             Directories to apply glob searches; current directory by default
         recursive
             Apply globs to all subdirectories of root directories
+        force
+            Skip user confirmation of deletion
     """
 ```
 
@@ -742,6 +815,8 @@ optional arguments:
     Directories to apply glob searches; current directory by default
   --recursive
     Apply globs to all subdirectories of root directories
+  --force
+    Skip user confirmation of deletion
 ```
 
 
@@ -813,6 +888,7 @@ def update(
 
 ```python
 import time
+import torchutil
 
 # Perform timing
 with torchutil.time.context('outer'):
@@ -822,8 +898,8 @@ with torchutil.time.context('outer'):
         with torchutil.time.context('inner'):
             time.sleep(1)
 
-# Prints {'outer': TODO, 'inner': TODO}
-print(torchutil.timer.results())
+# Prints {'inner': 2.0020763874053955, 'outer': 5.005248308181763, 'total': 5.005248308181763}
+print(torchutil.time.results())
 ```
 
 
