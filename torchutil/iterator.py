@@ -26,10 +26,6 @@ def iterator(
             Position to display corresponding to index zero of iterable
         total
             Length of the iterable; defaults to len(iterable)
-        num_workers
-            Multiprocessing pool size; defaults to single-threaded
-        worker_chunk_size
-            Number of items sent to each multiprocessing worker
 
     Returns
         Monitored iterable
