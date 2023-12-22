@@ -1,4 +1,5 @@
 from . import checkpoint
+from . import cuda
 from . import download
 from . import metrics
 from . import paths

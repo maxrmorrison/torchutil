@@ -346,29 +346,3 @@ class RMSE(Metric):
         """Reset RMSE"""
         self.count = 0
         self.total = 0.
-
-class CudaMaxMemoryUsage(Metric):
-    """Maxium allocated and reserved CUDA memory usage"""
-
-    # I am open to changing this design to just accept a device
-    def update(self, predicted: torch.Tensor, target: torch.Tensor) -> None:
-        """Update CUDA maximum memory usage
-        Arguments
-            predicted
-                The model prediction (just used to get device)
-            target
-                The corresponding ground truth (not used)
-        """
-        device_index = predicted.device.index
-        self.max_allocated = torch.cuda.max_memory_allocated(device_index)
-        self.max_reserved = torch.cuda.max_memory_reserved(device_index)
-
-    def reset(self) -> None:
-        self.max_allocated = 0
-        self.max_reserved = 0
-
-    def __call__(self):
-        return {
-            'max_allocated (GB)': float(self.max_allocated) / (1024 ** 3),
-            'max_reserved (GB)': float(self.max_reserved) / (1024 ** 3)
-        }

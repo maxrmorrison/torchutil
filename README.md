@@ -18,6 +18,8 @@ General utilities for developing deep learning projects using PyTorch
     * [`torchutil.checkpoint.latest_path`](#torchutilcheckpointlatest_path)
     * [`torchutil.checkpoint.load`](#torchutilcheckpointload)
     * [`torchutil.checkpoint.save`](#torchutilcheckpointsave)
+- [Cuda](#cuda)
+    * [`torchutil.cuda.utilization`](#torchutilcudautilization)
 - [Download](#download)
     * [`torchutil.download.file`](#torchutildownloadfile)
     * [`torchutil.download.tarbz2`](#torchutildownloadtarbz2)
@@ -168,6 +170,44 @@ def save(
         kwargs - Additional values to save
     """
 ```
+
+## Cuda
+
+```python
+import torch
+import torchutil
+
+# Directory to write Tensorboard files
+directory = 'tensorboard'
+
+# Training step
+step = 0
+
+# Log VRAM utilization in MB to Tensorboard
+torchutil.tensorboard.update(
+    directory,
+    step,
+    scalars=torchutil.cuda.utilization(torch.device('cuda:0'), 'MB'))
+```
+
+
+### `torchutil.cuda.utilization`
+
+```python
+def utilization(device: torch.Device, unit: str ='B') -> Dict[str, float]:
+    """Get the current VRAM utilization of a specified device
+
+    Arguments
+        device
+            The device to query for VRAM utilization
+        unit
+            Unit of memory utilization (bytes to terabytes); default bytes
+
+    Returns
+        Allocated and reserved VRAM utilization in the specified unit
+    """
+```
+
 
 ## Download
 

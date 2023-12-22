@@ -30,7 +30,7 @@ def measure(
         ]
     ] = None,
     recursive: bool = False,
-    unit='B'
+    unit: str ='B'
 ) -> Union[int, float]:
     """Measure data usage of files and directories
 

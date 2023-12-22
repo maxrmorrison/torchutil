@@ -28,7 +28,8 @@ def update(
     sample_rate: Optional[int] = None,
     figures: Optional[Dict] = None,
     images: Optional[Dict[str, torch.Tensor]] = None,
-    scalars: Optional[Dict[str, Union[float, int, torch.Tensor]]] = None):
+    scalars: Optional[Dict[str, Union[float, int, torch.Tensor]]] = None
+):
     """Update Tensorboard
 
     Arguments
@@ -94,12 +95,4 @@ def write_images(directory, step, images):
 def write_scalars(directory, step, scalars):
     """Write scalars to Tensorboard"""
     for name, scalar in scalars.items():
-        if isinstance(scalar, dict):
-            for subname, subscalar in scalar.items():
-                writer(directory).add_scalar(
-                    name + '/' + subname,
-                    subscalar,
-                    step
-                )
-        else:
-            writer(directory).add_scalar(name, scalar, step)
+        writer(directory).add_scalar(name, scalar, step)
