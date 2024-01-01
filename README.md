@@ -25,6 +25,8 @@ General utilities for developing deep learning projects using PyTorch
     * [`torchutil.download.tarbz2`](#torchutildownloadtarbz2)
     * [`torchutil.download.targz`](#torchutildownloadtargz)
     * [`torchutil.download.zip`](#torchutildownloadzip)
+- [Gradients](#gradients)
+    * ['torchutil.gradients.stats'](#torchutilgradientsstats)
 - [Iterator](#iterator)
     * [`torchutil.iterator`](#torchutiliterator)
     * [`torchutil.multiprocess_iterator`](#torchutilmultiprocess_iterator)
@@ -259,6 +261,57 @@ def zip(url: 'str', path: Union[str, bytes, os.PathLike]):
     Arguments
         url - The URL to download
         path - The location to save results
+    """
+```
+
+
+## Gradients
+
+```python
+import torch
+import torchutil
+
+# Directory to write Tensorboard files
+directory = 'tensorboard'
+
+# Training step
+step = 0
+
+# Setup model and optimizer
+# ...
+
+# Compute forward pass and loss
+# ...
+
+# Zero gradients
+optimizer.zero_grad()
+
+# Compute gradients
+loss.backward()
+
+# Monitor gradients on tensorboard
+torchutil.tensorboard.update(
+    directory,
+    step,
+    scalars=torchutil.gradients.stats(model))
+
+# Apply gradient update
+optimizer.step()
+```
+
+
+### `torchutil.gradients.stats`
+
+```python
+def stats(model: torch.nn.Module) -> Dict[str, float]:
+    """Get gradient statistics
+
+    Arguments
+        model
+            The torch model
+
+    Returns
+        The L2 norm, maximum, and minimum gradients
     """
 ```
 
