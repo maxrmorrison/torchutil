@@ -26,7 +26,9 @@ General utilities for developing deep learning projects using PyTorch
     * [`torchutil.download.targz`](#torchutildownloadtargz)
     * [`torchutil.download.zip`](#torchutildownloadzip)
 - [Gradients](#gradients)
-    * ['torchutil.gradients.stats'](#torchutilgradientsstats)
+    * [`torchutil.gradients.stats`](#torchutilgradientsstats)
+- [Inference](#inference)
+    * [`torchutil.inference.context`](#torchutilinferencecontext)
 - [Iterator](#iterator)
     * [`torchutil.iterator`](#torchutiliterator)
     * [`torchutil.multiprocess_iterator`](#torchutilmultiprocess_iterator)
@@ -312,6 +314,38 @@ def stats(model: torch.nn.Module) -> Dict[str, float]:
 
     Returns
         The L2 norm, maximum, and minimum gradients
+## Inference
+
+### `torchutil.inference.context`
+
+```python
+@contextlib.contextmanager
+def context(model: torch.nn.Module, autocast: bool = True) -> None:
+    """Inference-time handling of model training flag and optimizations
+
+    Arguments
+        model
+            The torch model performing inference
+        autocast
+            Whether to use mixed precision
+    """
+```
+
+
+## Inference
+
+### `torchutil.inference.context`
+
+```python
+@contextlib.contextmanager
+def context(model: torch.nn.Module, autocast: bool = True) -> None:
+    """Inference-time handling of model training flag and optimizations
+
+    Arguments
+        model
+            The torch model performing inference
+        autocast
+            Whether to use mixed precision
     """
 ```
 
