@@ -25,6 +25,8 @@ General utilities for developing deep learning projects using PyTorch
     * [`torchutil.download.tarbz2`](#torchutildownloadtarbz2)
     * [`torchutil.download.targz`](#torchutildownloadtargz)
     * [`torchutil.download.zip`](#torchutildownloadzip)
+- [Inference](#inference)
+    * [`torchutil.inference.context`](#torchutilinferencecontext)
 - [Iterator](#iterator)
     * [`torchutil.iterator`](#torchutiliterator)
     * [`torchutil.multiprocess_iterator`](#torchutilmultiprocess_iterator)
@@ -259,6 +261,24 @@ def zip(url: 'str', path: Union[str, bytes, os.PathLike]):
     Arguments
         url - The URL to download
         path - The location to save results
+    """
+```
+
+
+## Inference
+
+### `torchutil.inference.context`
+
+```python
+@contextlib.contextmanager
+def context(model: torch.nn.Module, autocast: bool = True) -> None:
+    """Inference-time handling of model training flag and optimizations
+
+    Arguments
+        model
+            The torch model performing inference
+        autocast
+            Whether to use mixed precision
     """
 ```
 

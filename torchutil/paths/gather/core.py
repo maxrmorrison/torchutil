@@ -7,7 +7,8 @@ def gather(
     *sources: List[Union[str, bytes, os.PathLike]],
     sinks: Optional[List[Union[str, bytes, os.PathLike]]] = None,
     source_extensions: Optional[str] = None,
-    sink_extension: str = '.pt'):
+    sink_extension: str = '.pt'
+):
     """
     Gathers lists of input and output directories and files into two lists
     of files, using the provided extension to glob directories.
