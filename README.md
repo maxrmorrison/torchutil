@@ -314,6 +314,7 @@ def stats(model: torch.nn.Module) -> Dict[str, float]:
 
     Returns
         The L2 norm, maximum, and minimum gradients
+    """
 ```
 
 
