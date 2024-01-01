@@ -314,21 +314,6 @@ def stats(model: torch.nn.Module) -> Dict[str, float]:
 
     Returns
         The L2 norm, maximum, and minimum gradients
-## Inference
-
-### `torchutil.inference.context`
-
-```python
-@contextlib.contextmanager
-def context(model: torch.nn.Module, autocast: bool = True) -> None:
-    """Inference-time handling of model training flag and optimizations
-
-    Arguments
-        model
-            The torch model performing inference
-        autocast
-            Whether to use mixed precision
-    """
 ```
 
 
