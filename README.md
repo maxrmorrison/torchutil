@@ -32,6 +32,8 @@ General utilities for developing deep learning projects using PyTorch
 - [Iterator](#iterator)
     * [`torchutil.iterator`](#torchutiliterator)
     * [`torchutil.multiprocess_iterator`](#torchutilmultiprocess_iterator)
+- [Mask](#mask)
+    * [`torchutil.mask.from_lengths`](#torchutilmaskfromlengths)
 - [Metrics](#metrics)
     * [`torchutil.metrics.Accuracy`](#torchutilmetricsaccuracy)
     * [`torchutil.metrics.Average`](#torchutilmetricsaverage)
@@ -416,6 +418,25 @@ def multiprocess_iterator(
 
     Returns
         Return values of calling process on each item, in original order
+    """
+```
+
+
+## Mask
+
+### `torchutil.mask.from_lengths`
+
+```python
+def from_lengths(lengths: torch.Tensor) -> torch.Tensor:
+    """Create boolean mask from sequence lengths
+
+    Arguments
+        lengths
+            The integer-type sequence lengths
+
+    Returns
+        mask
+            The boolean-type sequence mask
     """
 ```
 
