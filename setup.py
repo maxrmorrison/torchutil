@@ -8,11 +8,11 @@ with open('README.md') as file:
 setup(
     name='torchutil',
     description='PyTorch utilities for developing deep learning frameworks',
-    version='0.0.12',
+    version='0.0.13',
     author='Max Morrison',
     author_email='maxrmorrison@gmail.com',
     url='https://github.com/maxrmorrison/torchutil',
-    install_requires=['accelerate', 'apprise', 'tensorboard', 'torch'],
+    install_requires=['apprise', 'tensorboard', 'torch'],
     packages=find_packages(),
     package_data={'torchutil': ['assets/*', 'assets/*/*']},
     long_description=long_description,

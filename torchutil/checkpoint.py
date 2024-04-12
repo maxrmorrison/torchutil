@@ -50,7 +50,6 @@ def save(
     file: Union[str, bytes, os.PathLike],
     model: torch.nn.Module,
     optimizer: torch.optim.Optimizer,
-    accelerator=None,
     **kwargs
 ) -> None:
     """Save training checkpoint to disk
@@ -59,17 +58,12 @@ def save(
         file - The checkpoint file
         model - The PyTorch model
         optimizer - The PyTorch optimizer
-        accelerator - HuggingFace Accelerator for device management
         kwargs - Additional values to save
     """
-    if accelerator is None:
-        save_fn = torch.save
-    else:
-        save_fn = accelerator.save
     checkpoint = {
         'model': model.state_dict(),
         'optimizer': optimizer.state_dict()}
-    save_fn(checkpoint | kwargs, file)
+    torch.save(checkpoint | kwargs, file)
 
 
 ###############################################################################

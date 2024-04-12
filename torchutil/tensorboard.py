@@ -1,18 +1,8 @@
 import os
 from typing import Dict, Optional, Union
 
-import accelerate
 import torch
 from torch.utils.tensorboard import SummaryWriter
-
-
-###############################################################################
-# Constants
-###############################################################################
-
-
-# Device managenent state
-STATE = accelerate.state.PartialState()
 
 
 ###############################################################################
@@ -20,7 +10,6 @@ STATE = accelerate.state.PartialState()
 ###############################################################################
 
 
-@STATE.on_main_process
 def update(
     directory: Union[str, bytes, os.PathLike],
     step: int,
@@ -56,7 +45,6 @@ def update(
 ###############################################################################
 
 
-@STATE.on_main_process
 def writer(directory):
     """Get the writer object"""
     if not hasattr(writer, 'writer') or writer.directory != directory:
@@ -70,28 +58,24 @@ def writer(directory):
 ###############################################################################
 
 
-@STATE.on_main_process
 def write_audio(directory, step, audio, sample_rate):
     """Write audio to Tensorboard"""
     for name, waveform in audio.items():
         writer(directory).add_audio(name, waveform, step, sample_rate)
 
 
-@STATE.on_main_process
 def write_figures(directory, step, figures):
     """Write figures to Tensorboard"""
     for name, figure in figures.items():
         writer(directory).add_figure(name, figure, step)
 
 
-@STATE.on_main_process
 def write_images(directory, step, images):
     """Write images to Tensorboard"""
     for name, image in images.items():
         writer(directory).add_image(name, image, step, dataformats='HCW')
 
 
-@STATE.on_main_process
 def write_scalars(directory, step, scalars):
     """Write scalars to Tensorboard"""
     for name, scalar in scalars.items():
