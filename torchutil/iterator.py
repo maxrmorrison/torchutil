@@ -2,6 +2,7 @@ import os
 from typing import Callable, Iterable, List, Optional
 
 import tqdm
+from tqdm.contrib.concurrent import process_map
 
 
 ###############################################################################
@@ -80,7 +81,7 @@ def multiprocess_iterator(
             1 if num_workers == total else min(32, total // num_workers)
 
     # Multiprocess monitor
-    return tqdm.contrib.concurrent.process_map(
+    return process_map(
         process,
         iterable,
         desc=message,
