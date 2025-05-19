@@ -17,7 +17,9 @@ def update(
     sample_rate: Optional[int] = None,
     figures: Optional[Dict] = None,
     images: Optional[Dict[str, torch.Tensor]] = None,
-    scalars: Optional[Dict[str, Union[float, int, torch.Tensor]]] = None
+    scalars: Optional[Dict[str, Union[float, int, torch.Tensor]]] = None,
+    grouped_scalars: Optional[Dict[str, torch.Tensor]] = None,
+    hyperparameters: Optional[Dict[str, Union[bool, str, float, int, None]]] = None
 ):
     """Update Tensorboard
 
@@ -29,6 +31,8 @@ def update(
         figures - Optional dictionary of Matplotlib figures to monitor
         images - Optional dictionary of 3D image tensors to monitor
         scalars - Optional dictionary of scalars to monitor
+        grouped_scalars - Optional dictionary of dictionaries containing grouped scalars to monitor
+        hyperparameters - Optional dictionary of hyperparameters to log
     """
     if audio is not None:
         write_audio(directory, step, audio, sample_rate)
@@ -38,6 +42,10 @@ def update(
         write_images(directory, step, images)
     if scalars is not None:
         write_scalars(directory, step, scalars)
+    if grouped_scalars is not None:
+        write_grouped_scalars(directory, step, grouped_scalars)
+    if hyperparameters is not None:
+        write_hyperparameters(directory, step, hyperparameters)
 
 
 ###############################################################################
@@ -80,3 +88,20 @@ def write_scalars(directory, step, scalars):
     """Write scalars to Tensorboard"""
     for name, scalar in scalars.items():
         writer(directory).add_scalar(name, scalar, step)
+
+
+def write_grouped_scalars(directory, step, grouped_scalars):
+    """Write grouped scalars to Tensorboard"""
+    for name, scalars in grouped_scalars.items():
+        tags = []
+        for tag, value in scalars.items():
+            full_tag = f'{name}/{tag}'
+            w = writer(directory)
+            w.add_scalar(full_tag, value, step)
+            tags.append(full_tag)
+        w.add_custom_scalars_multilinechart(tags)
+        # writer(directory).add_scalars(name, scalars, step)
+
+def write_hyperparameters(directory, step, hyperparameters):
+    """Write hyperparameters to Tensorboard"""
+    writer(directory).add_hparams(hyperparameters, global_step=step)
