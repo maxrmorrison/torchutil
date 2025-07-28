@@ -1,0 +1,41 @@
+[build-system]
+requires = [
+    "setuptools>=61.0,<70",
+    # "numpy",
+    # "pybind11",
+    # "torch"
+]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "torchutil"
+version = "0.1.0"
+authors = [
+  { name="Max Morrison", email="maxrmorrison@gmail.com" },
+  { name="Cameron Churchwell", email="cameronchurchwell@icloud.com" }
+]
+description = "PyTorch utilities for developing deep learning frameworks"
+readme = "README.md"
+requires-python = ">=3.8"
+dependencies = [
+    'apprise', 'torch', 'tensorboard', 'tqdm'
+]
+classifiers = [
+    "License :: OSI Approved :: MIT License"
+]
+license = {text = "MIT License"}
+keywords = []
+
+[project.urls]
+Homepage = "https://github.com/maxrmorrison/torchutil"
+Issues = "https://github.com/maxrmorrison/torchutil/issues"
+
+# [project.optional-dependencies]
+# evaluate = [
+# ]
+
+[tool.setuptools.package-data]
+torchutil = ["assets/*", "assets/*/*"]
+
+[tool.setuptools.packages.find]
+where = ["."]

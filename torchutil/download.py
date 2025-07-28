@@ -4,6 +4,7 @@ import tarfile
 import tempfile
 import zipfile
 from typing import Union
+import tqdm
 
 
 ###############################################################################
@@ -24,10 +25,12 @@ def file(url: 'str', path: Union[str, bytes, os.PathLike], use_headers: bool = F
         "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
     } if use_headers else None
     with requests.get(url, stream=True, headers=headers) as rstream:
+        total_size = int(rstream.headers.get('content-length', 0))
         rstream.raise_for_status()
-        with open(path, 'wb') as fstream:
+        with open(path, 'wb') as fstream, tqdm.tqdm(total=total_size, unit='B', unit_scale=True) as progress:
             for chunk in rstream.iter_content(chunk_size=128):
                 fstream.write(chunk)
+                progress.update(len(chunk))
 
 
 def tarbz2(url: 'str', path: Union[str, bytes, os.PathLike], use_headers: bool = False):
