@@ -25,6 +25,7 @@ General utilities for developing deep learning projects using PyTorch
     * [`torchutil.download.tarbz2`](#torchutildownloadtarbz2)
     * [`torchutil.download.targz`](#torchutildownloadtargz)
     * [`torchutil.download.zip`](#torchutildownloadzip)
+    * [`torchutil.download.DownloadProgressBar`](#torchutildownloaddownloadprogressbar)
 - [Gradients](#gradients)
     * [`torchutil.gradients.stats`](#torchutilgradientsstats)
 - [Inference](#inference)
@@ -218,12 +219,23 @@ def utilization(device: torch.Device, unit: str ='B') -> Dict[str, float]:
 ### `torchutil.download.file`
 
 ```python
-def file(url: 'str', path: Union[str, bytes, os.PathLike]):
+def file(
+    url: str,
+    path: Union[str, bytes, os.PathLike],
+    use_headers: bool = False,
+    timeout: Optional[float] = None,
+    progress_bar_class: Callable = DownloadProgressBar
+):
     """Download file from url
 
     Arguments
         url - The URL to download
         path - The location to save results
+        use_headers - Use headers to imitate a browser
+        timeout - Connect timeout and maximum gap between reads in seconds;
+            not a limit on total download time. None waits indefinitely
+        progress_bar_class - Called with the total size to create the progress
+            bar; must produce an object with an update method
     """
 ```
 
@@ -231,12 +243,23 @@ def file(url: 'str', path: Union[str, bytes, os.PathLike]):
 ### `torchutil.download.tarbz2`
 
 ```python
-def tarbz2(url: 'str', path: Union[str, bytes, os.PathLike]):
+def tarbz2(
+    url: str,
+    path: Union[str, bytes, os.PathLike],
+    use_headers: bool = False,
+    timeout: Optional[float] = None,
+    progress_bar_class: Callable = DownloadProgressBar
+):
     """Download and extract tar bz2 file to location
 
     Arguments
         url - The URL to download
         path - The location to save results
+        use_headers - Use headers to imitate a browser
+        timeout - Connect timeout and maximum gap between reads in seconds;
+            not a limit on total download time. None waits indefinitely
+        progress_bar_class - Called with the total size to create the progress
+            bar; must produce an object with an update method
     """
 ```
 
@@ -244,12 +267,23 @@ def tarbz2(url: 'str', path: Union[str, bytes, os.PathLike]):
 ### `torchutil.download.targz`
 
 ```python
-def targz(url: 'str', path: Union[str, bytes, os.PathLike]):
+def targz(
+    url: str,
+    path: Union[str, bytes, os.PathLike],
+    use_headers: bool = False,
+    timeout: Optional[float] = None,
+    progress_bar_class: Callable = DownloadProgressBar
+):
     """Download and extract tar gz file to location
 
     Arguments
         url - The URL to download
         path - The location to save results
+        use_headers - Use headers to imitate a browser
+        timeout - Connect timeout and maximum gap between reads in seconds;
+            not a limit on total download time. None waits indefinitely
+        progress_bar_class - Called with the total size to create the progress
+            bar; must produce an object with an update method
     """
 ```
 
@@ -257,13 +291,50 @@ def targz(url: 'str', path: Union[str, bytes, os.PathLike]):
 ### `torchutil.download.zip`
 
 ```python
-def zip(url: 'str', path: Union[str, bytes, os.PathLike]):
+def zip(
+    url: str,
+    path: Union[str, bytes, os.PathLike],
+    use_headers: bool = False,
+    timeout: Optional[float] = None,
+    progress_bar_class: Callable = DownloadProgressBar
+):
     """Download and extract zip file to location
 
     Arguments
         url - The URL to download
         path - The location to save results
+        use_headers - Use headers to imitate a browser
+        timeout - Connect timeout and maximum gap between reads in seconds;
+            not a limit on total download time. None waits indefinitely
+        progress_bar_class - Called with the total size to create the progress
+            bar; must produce an object with an update method
     """
+```
+
+
+### `torchutil.download.DownloadProgressBar`
+
+```python
+class DownloadProgressBar(tqdm.tqdm):
+    """Progress bar with defaults for byte-scaled download progress"""
+```
+
+The default progress bar used by all download functions. Each download is
+given its own bar, which is created by calling `progress_bar_class` with the
+total download size in bytes. To nest a download under an outer progress bar,
+bind the arguments you want with `functools.partial`.
+
+```python
+import functools
+import torchutil
+
+torchutil.download.targz(
+    url,
+    path,
+    progress_bar_class=functools.partial(
+        torchutil.download.DownloadProgressBar,
+        position=1,
+        desc='Downloading dataset'))
 ```
 
 
