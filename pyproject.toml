@@ -9,7 +9,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "torchutil"
-version = "0.1.1"
+version = "0.1.2"
 authors = [
   { name="Max Morrison", email="maxrmorrison@gmail.com" },
   { name="Cameron Churchwell", email="cameronchurchwell@icloud.com" }
